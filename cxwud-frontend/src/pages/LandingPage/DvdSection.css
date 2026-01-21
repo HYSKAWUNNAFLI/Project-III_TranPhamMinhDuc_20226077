@@ -1,0 +1,483 @@
+/* --- Variables & Reset --- */
+.immersive-cinema {
+  --c-accent: #ff5e3a;
+  --c-accent-glow: rgba(255, 94, 58, 0.6);
+  --c-text: #ffffff;
+  --c-text-muted: rgba(255, 255, 255, 0.7);
+  --c-glass: rgba(255, 255, 255, 0.05);
+  --c-glass-border: rgba(255, 255, 255, 0.1);
+  --font-display: var(--font-fog);
+
+  color: var(--c-text);
+  overflow: hidden;
+  position: relative;
+  font-family: var(--font-display);
+}
+
+/* --- Background Video & Ambient --- */
+.cinema-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.cinema-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.6;
+  /* Video mờ đi để text nổi bật */
+  filter: saturate(1.2) contrast(1.1);
+}
+
+.cinema-overlay {
+  position: absolute;
+  inset: 0;
+  /* Gradient chuyển từ đen sang trong suốt để text bên trái dễ đọc */
+  background: linear-gradient(90deg, #000000 0%, rgba(0, 0, 0, 0.8) 40%, rgba(0, 0, 0, 0.4) 100%);
+}
+
+.cinema-spotlight {
+  position: absolute;
+  top: -20%;
+  right: -10%;
+  width: 800px;
+  height: 800px;
+  background: radial-gradient(circle, var(--c-accent-glow) 0%, transparent 70%);
+  opacity: 0.2;
+  filter: blur(80px);
+  mix-blend-mode: screen;
+  animation: breatheLight 8s ease-in-out infinite alternate;
+}
+
+/* --- Hero Layout --- */
+.cinema-hero {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+  height: 100%;
+  align-items: center;
+}
+
+/* --- Typography & Content --- */
+.cinematic-content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.cinema-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--c-accent);
+  font-weight: 600;
+}
+
+.eyebrow-line {
+  width: 40px;
+  height: 2px;
+  background: var(--c-accent);
+}
+
+.cinematic-title {
+  font-size: clamp(48px, 6vw, 80px);
+  line-height: 1;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin: 0;
+  font-family: var(--font-fog);
+  color: #ffffff;
+  text-shadow: 0 6px 24px rgba(0, 0, 0, 0.65);
+  text-align: left;
+}
+
+.text-highlight {
+  color: var(--c-accent);
+  background: none;
+  -webkit-text-fill-color: var(--c-accent);
+  display: inline-block;
+}
+
+.cinematic-desc {
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--c-text-muted);
+  max-width: 480px;
+  margin: 0;
+}
+
+/* --- Stats Row --- */
+.cinematic-stats {
+  display: flex;
+  gap: 40px;
+  margin-top: 10px;
+  padding: 20px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.13);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: #fff !important;
+  /* Force white color */
+  position: relative;
+  z-index: 5;
+  opacity: 1;
+  -webkit-text-fill-color: initial;
+  /* Reset any text fill overrides */
+}
+
+.stat-label {
+  font-size: 12px;
+  color: var(--c-text-muted);
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+
+/* --- Buttons --- */
+.cinema-actions {
+  display: flex;
+  gap: 16px;
+  margin-top: 10px;
+}
+
+.btn-magnetic {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 32px;
+  border-radius: 100px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-magnetic.primary {
+  background: #fff;
+  color: #000;
+}
+
+.btn-magnetic.primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(255, 255, 255, 0.3);
+}
+
+.btn-magnetic.secondary {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.btn-magnetic.secondary:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: #fff;
+}
+
+/* --- Visual Area (Right Side) --- */
+.cinematic-visual {
+  position: relative;
+  height: 500px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 1000px;
+}
+
+.big-text-bg {
+  position: absolute;
+  font-size: 300px;
+  font-weight: 900;
+  opacity: 0.03;
+  color: #fff;
+  z-index: 0;
+  select-user: none;
+}
+
+.disc-wrapper {
+  position: relative;
+  width: 320px;
+  height: 320px;
+  z-index: 2;
+  transform-style: preserve-3d;
+  animation: floatDisc 6s ease-in-out infinite;
+}
+
+/* 1. Case Blur (Vỏ hộp ảo phía sau) */
+.disc-case-blur {
+  position: absolute;
+  inset: -20px;
+  border-radius: 40px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.02));
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transform: translateZ(-50px) rotate(-5deg);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+}
+
+/* 2. The Disc */
+.disc-3d-container {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  padding: 4px;
+  /* Viền đĩa */
+  background: linear-gradient(135deg, #444, #111);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+  animation: spinDisc 20s linear infinite;
+}
+
+.disc-3d {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: #000;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Texture 7 màu */
+.disc-texture {
+  position: absolute;
+  inset: 0;
+  background: conic-gradient(from 0deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.1) 10%,
+      transparent 20%,
+      rgba(255, 0, 150, 0.2) 30%,
+      /* Hồng neon */
+      rgba(0, 255, 255, 0.2) 50%,
+      /* Xanh cyan */
+      transparent 60%,
+      rgba(255, 255, 255, 0.2) 80%,
+      transparent 100%);
+  border-radius: 50%;
+}
+
+.disc-reflection {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.1) 0%, transparent 60%);
+  z-index: 2;
+}
+
+.disc-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 35%;
+  height: 35%;
+  background: #1a1a1a;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3;
+}
+
+.disc-hole {
+  width: 12px;
+  height: 12px;
+  background: #000;
+  border-radius: 50%;
+  position: absolute;
+  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.3);
+}
+
+.brand {
+  margin-top: 20px;
+  font-size: 10px;
+  color: #666;
+  letter-spacing: 2px;
+  font-weight: 700;
+}
+
+/* 3. Floating Tech Cards */
+.tech-card {
+  position: absolute;
+  background: rgba(20, 20, 20, 0.8);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 12px 16px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease;
+  min-width: 140px;
+}
+
+.tech-card:hover {
+  background: rgba(40, 40, 40, 0.9);
+  transform: scale(1.05);
+}
+
+.card-dolby {
+  top: 10%;
+  right: -10%;
+  animation: floatCard 5s ease-in-out infinite;
+}
+
+.card-bluray {
+  bottom: 10%;
+  left: -10%;
+  animation: floatCard 5s ease-in-out infinite 2.5s;
+}
+
+.tech-info strong {
+  display: block;
+  font-size: 14px;
+  color: #fff;
+}
+
+.tech-info span {
+  font-size: 11px;
+  color: #aaa;
+}
+
+/* --- Scroll Hint --- */
+.theme__scroll-hint {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  opacity: 0.6;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.scroll-line {
+  width: 1px;
+  height: 40px;
+  background: linear-gradient(to bottom, #fff, transparent);
+}
+
+/* --- Animations --- */
+@keyframes breatheLight {
+  0% {
+    transform: scale(1);
+    opacity: 0.2;
+  }
+
+  100% {
+    transform: scale(1.2);
+    opacity: 0.3;
+  }
+}
+
+@keyframes floatDisc {
+
+  0%,
+  100% {
+    transform: translateY(0) rotateX(5deg) rotateY(-5deg);
+  }
+
+  50% {
+    transform: translateY(-20px) rotateX(5deg) rotateY(-5deg);
+  }
+}
+
+@keyframes spinDisc {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes floatCard {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* --- Responsive --- */
+@media (max-width: 1024px) {
+  .cinema-hero {
+    grid-template-columns: 1fr;
+    text-align: left;
+    gap: 40px;
+  }
+
+  .cinematic-content {
+    align-items: flex-start;
+  }
+
+  .cinema-overlay {
+    background: linear-gradient(0deg, #000 0%, rgba(0, 0, 0, 0.7) 100%);
+  }
+
+  .cinematic-stats {
+    justify-content: flex-start;
+  }
+
+  .cinematic-visual {
+    height: 400px;
+  }
+
+  .card-dolby {
+    right: 0;
+  }
+
+  .card-bluray {
+    left: 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .cinematic-title {
+    font-size: 42px;
+  }
+
+  .disc-wrapper {
+    width: 240px;
+    height: 240px;
+  }
+
+  .cinema-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .btn-magnetic {
+    justify-content: center;
+    width: 100%;
+  }
+}

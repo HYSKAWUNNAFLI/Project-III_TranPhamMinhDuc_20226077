@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.24.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <changeSet id="1768937155120-3" author="ad">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="products" columnName="description"/>
+            </not>
+        </preConditions>
+
+        <addColumn tableName="products">
+            <column name="description" type="TEXT"/>
+        </addColumn>
+
+        <dropUniqueConstraint constraintName="uc_invoices_order" tableName="invoices"/>
+        <dropUniqueConstraint constraintName="uc_notification_outbox_idempotency" tableName="notification_outbox"/>
+        <dropIndex indexName="ix_notification_outbox_status_retry" tableName="notification_outbox"/>
+    </changeSet>
+    <changeSet id="1768937155120-4" author="ad">
+        <addColumn tableName="invoices">
+            <column name="status" type="VARCHAR(255)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="1768937155120-1" author="ad">
+        <dropNotNullConstraint columnDataType="datetime" columnName="created_at" tableName="notification_outbox"/>
+    </changeSet>
+    <changeSet id="1768937155120-2" author="ad">
+        <addNotNullConstraint columnDataType="BOOLEAN" columnName="is_checked_out" tableName="carts" validate="true"/>
+    </changeSet>
+
+</databaseChangeLog>

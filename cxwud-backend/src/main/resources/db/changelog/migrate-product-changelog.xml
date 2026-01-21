@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.24.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <changeSet id="1766310314271-10" author="hiumonday">
+        <dropForeignKeyConstraint baseTableName="products" constraintName="fk_products_on_book_detail"/>
+    </changeSet>
+    <changeSet id="1766310314271-11" author="hiumonday">
+        <dropForeignKeyConstraint baseTableName="products" constraintName="fk_products_on_cd_detail"/>
+    </changeSet>
+    <changeSet id="1766310314271-12" author="hiumonday">
+        <dropForeignKeyConstraint baseTableName="products" constraintName="fk_products_on_dvd_detail"/>
+    </changeSet>
+    <changeSet id="1766310314271-13" author="hiumonday">
+        <dropForeignKeyConstraint baseTableName="products" constraintName="fk_products_on_newspaper_detail"/>
+    </changeSet>
+    <changeSet id="1766310314271-1" author="hiumonday">
+        <createTable tableName="product_types">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_product_types"/>
+            </column>
+            <column name="code" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1766310314271-2" author="hiumonday">
+        <createTable tableName="type_attributes">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_type_attributes"/>
+            </column>
+            <column name="type_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="attribute_key" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="label" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="data_type" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_required" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1766310314271-3" author="hiumonday">
+        <addColumn tableName="products">
+            <column name="attributes" type="jsonb"/>
+            <column name="type_id" type="BIGINT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="1766310314271-5" author="hiumonday">
+        <addNotNullConstraint columnName="type_id" tableName="products"/>
+    </changeSet>
+    <changeSet id="1766310314271-6" author="hiumonday">
+        <addUniqueConstraint columnNames="type_id, attribute_key" constraintName="uc_722a7e98f8a8ba7cd96ef7b4c"
+                             tableName="type_attributes"/>
+    </changeSet>
+    <changeSet id="1766310314271-7" author="hiumonday">
+        <addUniqueConstraint columnNames="code" constraintName="uc_product_types_code" tableName="product_types"/>
+    </changeSet>
+    <changeSet id="1766310314271-8" author="hiumonday">
+        <addForeignKeyConstraint baseColumnNames="type_id" baseTableName="products" constraintName="FK_PRODUCTS_ON_TYPE"
+                                 referencedColumnNames="id" referencedTableName="product_types"/>
+    </changeSet>
+    <changeSet id="1766310314271-9" author="hiumonday">
+        <addForeignKeyConstraint baseColumnNames="type_id" baseTableName="type_attributes"
+                                 constraintName="FK_TYPE_ATTRIBUTES_ON_TYPE" referencedColumnNames="id"
+                                 referencedTableName="product_types"/>
+    </changeSet>
+    <changeSet id="1766310314271-18" author="hiumonday">
+        <dropTable cascadeConstraints="true" tableName="book_details"/>
+    </changeSet>
+    <changeSet id="1766310314271-19" author="hiumonday">
+        <dropTable cascadeConstraints="true" tableName="cd_details"/>
+    </changeSet>
+    <changeSet id="1766310314271-20" author="hiumonday">
+        <dropTable cascadeConstraints="true" tableName="dvd_details"/>
+    </changeSet>
+    <changeSet id="1766310314271-21" author="hiumonday">
+        <dropTable cascadeConstraints="true" tableName="newspaper_details"/>
+    </changeSet>
+    <changeSet id="1766310314271-22" author="hiumonday">
+        <dropColumn columnName="book_detail_id" tableName="products"/>
+
+        <dropColumn columnName="cd_detail_id" tableName="products"/>
+
+        <dropColumn columnName="dvd_detail_id" tableName="products"/>
+
+        <dropColumn columnName="newspaper_detail_id" tableName="products"/>
+
+        <dropColumn columnName="product_type" tableName="products"/>
+    </changeSet>
+
+</databaseChangeLog>

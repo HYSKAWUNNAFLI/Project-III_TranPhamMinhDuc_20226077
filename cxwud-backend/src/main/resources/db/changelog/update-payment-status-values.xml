@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.24.xsd">
+    <changeSet id="1768659901000-1" author="codex">
+        <sql>
+            UPDATE payment_transactions SET status = 'PENDING' WHERE status = 'INIT';
+            UPDATE payment_transactions SET status = 'SUCCESSFULL' WHERE status = 'CAPTURED';
+        </sql>
+    </changeSet>
+</databaseChangeLog>

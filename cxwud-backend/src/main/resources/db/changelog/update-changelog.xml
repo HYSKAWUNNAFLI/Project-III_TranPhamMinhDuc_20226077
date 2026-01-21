@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.24.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <changeSet id="1768660148176-1" author="hiumonday">
+        <preConditions onFail="MARK_RAN">
+            <foreignKeyConstraintExists
+                    foreignKeyName="fk_payment_transactions_on_invoice"
+                    foreignKeyTableName="payment_transactions"/>
+        </preConditions>
+        <dropForeignKeyConstraint baseTableName="payment_transactions"
+                                  constraintName="fk_payment_transactions_on_invoice"/>
+
+        <dropUniqueConstraint constraintName="uc_payment_transactions_invoice" tableName="payment_transactions"/>
+    </changeSet>
+    <changeSet id="1768660148176-3" author="hiumonday">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="invoices" columnName="created_at"/>
+        </preConditions>
+        <dropColumn columnName="created_at" tableName="invoices"/>
+    </changeSet>
+
+    <changeSet id="1768660148176-4" author="hiumonday">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="orders" columnName="email"/>
+        </preConditions>
+        <dropColumn columnName="email" tableName="orders"/>
+    </changeSet>
+
+    <changeSet id="1768660148176-5" author="hiumonday">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="payment_transactions" columnName="invoice_id"/>
+        </preConditions>
+        <dropColumn columnName="invoice_id" tableName="payment_transactions"/>
+    </changeSet>
+
+</databaseChangeLog>

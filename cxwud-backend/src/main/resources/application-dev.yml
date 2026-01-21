@@ -1,0 +1,35 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://ep-lucky-night-a1c2sj4k-pooler.ap-southeast-1.aws.neon.tech/neondb?user=neondb_owner&password=npg_uI47gXUtjQRa&sslmode=require&channelBinding=require
+    username: postgres
+    password: matkhau_moi
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update # Hibernate sẽ hỗ trợ đồng bộ các entity chưa có trong Liquibase
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  liquibase:
+    contexts: dev
+    enabled: true # Đảm bảo Liquibase được bật
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME:aims.jsc34@gmail.com}
+    password: ${MAIL_PASSWORD:krlubklvareizrfj}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+
+server:
+  port: 8000

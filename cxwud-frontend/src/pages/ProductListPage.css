@@ -1,0 +1,448 @@
+/* ProductListPage.css - Sketch Design Match */
+
+:root {
+  --font-primary: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --color-black: #000;
+  --color-dark-gray: #333;
+  --color-gray: #999;
+  --color-light-gray: #eee;
+  --color-bg: #fff;
+}
+
+.products-page {
+  background-color: var(--color-bg);
+  min-height: 100vh;
+  padding-bottom: 80px;
+  font-family: var(--font-primary);
+  color: var(--color-black);
+}
+
+/* --- Hero & Header --- */
+.products-hero {
+  padding: 40px 20px;
+  margin-bottom: 40px;
+  background: #fff;
+}
+
+.products-hero__content {
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.products-hero h1 {
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin: 0 0 40px;
+}
+
+/* --- Filter Bar --- */
+.filters-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.filters-top {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.filters-top .search-group {
+  display: flex;
+  justify-content: center;
+}
+
+.filter-group.search-group input {
+  width: 300px;
+  padding: 10px 0;
+  border: none;
+  border-bottom: 1px solid #ccc;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-align: center;
+  outline: none;
+  background: transparent;
+  transition: border-color 0.2s;
+}
+
+.filter-group.search-group input:focus {
+  border-bottom-color: var(--color-black);
+}
+
+.filter-toggle {
+  border: 1px solid #000;
+  background: #fff;
+  color: #000;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 10px 16px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.filter-toggle:hover {
+  background: #000;
+  color: #fff;
+}
+
+.filter-toggle__icon {
+  transition: transform 0.3s ease;
+}
+
+.filter-toggle.is-open .filter-toggle__icon {
+  transform: rotate(180deg);
+}
+
+.filter-panel {
+  width: 100%;
+  max-height: 0;
+  opacity: 0;
+  transform: translateY(-6px);
+  overflow: hidden;
+  visibility: hidden;
+  pointer-events: none;
+  transition: max-height 0.35s ease, opacity 0.35s ease, transform 0.35s ease;
+}
+
+.filter-panel.is-open {
+  max-height: 260px;
+  opacity: 1;
+  transform: translateY(0);
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.filter-panel__inner {
+  background: linear-gradient(135deg, #ffffff 0%, #f8f8f8 100%);
+  border: 1px solid #e6e6e6;
+  border-radius: 18px;
+  padding: 18px 22px;
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.08);
+}
+
+.filter-row {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.select-wrapper select {
+  padding: 8px 24px 8px 8px;
+  border: none;
+  background: transparent;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  color: var(--color-black);
+  outline: none;
+}
+
+/* --- Grid --- */
+.products-listing {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  /* 240px cards */
+  gap: 40px 30px;
+}
+
+.state-message {
+  text-align: center;
+  padding: 60px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 14px;
+  color: var(--color-gray);
+}
+
+/* --- Product Card (Sketch Style) --- */
+.product-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: transparent;
+  border: 1px solid transparent;
+  padding: 14px;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.product-card:hover {
+  border-color: #f0f0f0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+}
+
+.product-card__media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1/1;
+  /* Square ratio per sketch */
+  background: #f9f9f9;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 4px;
+}
+
+.product-card__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.product-card:hover .product-card__media img {
+  transform: scale(1.05);
+}
+
+.product-badge {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  background: rgba(0, 0, 0, 0.95);
+  color: #ffffff;
+  padding: 2px 6px;
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  border-radius: 2px;
+  letter-spacing: 0.5px;
+}
+
+.stock-warning {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.95);
+  color: #d32f2f;
+  font-size: 10px;
+  text-transform: uppercase;
+  text-align: center;
+  padding: 2px;
+  font-weight: 700;
+}
+
+.product-card__body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.product-card__body h3 {
+  margin: 0;
+  font-size: 14px;
+  /* Name size per sketch */
+  font-weight: 600;
+  text-transform: capitalize;
+  color: #000;
+  line-height: 1.3;
+  min-height: auto;
+  text-align: left;
+}
+
+.product-card__body h3 a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.product-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2px;
+}
+
+.product-meta .price {
+  font-size: 14px;
+  font-weight: 600;
+  color: #000;
+}
+
+.stock-info {
+  display: inline-block;
+  font-size: 10px;
+  color: #666;
+  font-weight: 600;
+  background: #f0f0f0;
+  padding: 1px 3px;
+  border-radius: 99px;
+  /* Max roundness for pill */
+  text-align: center;
+  line-height: 0.1;
+  height: 10px;
+}
+
+/* --- Footer: Controls Row --- */
+.product-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  /* Space out Qty and Buttons */
+  gap: 12px;
+  margin-top: auto;
+}
+
+/* Quantity Control (Pill Shape) */
+.products-page .qty-control {
+  display: grid;
+  grid-template-columns: 28px 1fr 28px;
+  align-items: center;
+  justify-items: center;
+  gap: 4px;
+  width: 100px;
+  height: 34px;
+  border: 1px solid #000;
+  border-radius: 6px;
+  background: #fff;
+  padding: 0 6px;
+}
+
+.products-page .qty-btn {
+  width: 28px;
+  height: 26px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.products-page .qty-btn:hover {
+  background: #f0f0f0;
+}
+
+.products-page .qty-btn svg {
+  width: 16px;
+  height: 16px;
+  display: block;
+}
+
+.products-page .qty-control span {
+  font-size: 14px;
+  font-weight: 700;
+  min-width: 14px;
+  text-align: center;
+}
+
+/* Action Buttons (Icons) */
+.action-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-icon {
+  width: 34px;
+  height: 34px;
+  border: 1px solid #000;
+  border-radius: 8px;
+  /* Rounded square */
+  background: #fff;
+  /* White bg */
+  color: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  padding: 0;
+}
+
+.btn-icon:hover {
+  background: #000;
+  color: #fff;
+}
+
+.btn-icon svg {
+  display: block;
+  width: 18px;
+  height: 18px;
+  stroke-width: 1.8px;
+}
+
+/* Special styling for cart button if desired, but sketch shows consistent icons */
+.btn-cart {
+  /* No special overrides needed to match generic icon style */
+}
+
+.btn-cart::after {
+  content: none;
+}
+
+/* Pagination */
+.pagination {
+  margin-top: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+
+.pagination button {
+  background: none;
+  border: none;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  color: var(--color-black);
+}
+
+.pagination button:disabled {
+  color: #ccc;
+  cursor: not-allowed;
+}
+
+.page-info {
+  font-size: 12px;
+  color: var(--color-gray);
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  .products-listing {
+    padding: 0 16px;
+  }
+
+  .filters-top {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .filter-panel__inner {
+    padding: 14px 16px;
+  }
+}

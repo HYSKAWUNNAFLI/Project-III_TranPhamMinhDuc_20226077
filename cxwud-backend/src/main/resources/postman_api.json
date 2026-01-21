@@ -1,0 +1,369 @@
+{
+  "info": {
+    "name": "AIMS Backend API",
+    "_postman_id": "f7e6b3a9-1234-4d8a-b5f1-111122223333",
+    "description": "Postman collection for AIMS backend (dev profile). Base URL is {{baseUrl}}.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Change Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"oldPassword\": \"password123\",\n  \"newPassword\": \"newPass123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/change-password?userId=1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "change-password"],
+              "query": [
+                {
+                  "key": "userId",
+                  "value": "1"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Products",
+      "item": [
+        {
+          "name": "List Products",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/products?page=0&size=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "products"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "20"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Product by ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/products/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "products", "1"]
+            }
+          }
+        },
+        {
+          "name": "Admin - Create Product",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productType\": \"BOOK\",\n  \"status\": \"ACTIVE\",\n  \"barcode\": \"1234567890123\",\n  \"title\": \"Sample Book\",\n  \"category\": \"Books\",\n  \"conditionLabel\": \"New\",\n  \"dominantColor\": \"Blue\",\n  \"returnPolicy\": \"30 days\",\n  \"height\": 20.0,\n  \"width\": 13.0,\n  \"length\": 2.0,\n  \"weight\": 0.5,\n  \"originalValue\": 25.00,\n  \"currentPrice\": 20.00,\n  \"stock\": 100,\n  \"bookDetail\": null,\n  \"newspaperDetail\": null,\n  \"cdDetail\": null,\n  \"dvdDetail\": null\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/products",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "admin", "products"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Cart",
+      "item": [
+        {
+          "name": "Get Cart",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/cart?sessionKey=test-session-1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "cart"],
+              "query": [
+                {
+                  "key": "sessionKey",
+                  "value": "test-session-1"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Add Item to Cart",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productId\": 1,\n  \"quantity\": 2,\n  \"price\": 20.00\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/cart/items?sessionKey=test-session-1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "cart", "items"],
+              "query": [
+                {
+                  "key": "sessionKey",
+                  "value": "test-session-1"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Cart Item",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productId\": 1,\n  \"quantity\": 3,\n  \"price\": 19.50\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/cart/items?sessionKey=test-session-1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "cart", "items"],
+              "query": [
+                {
+                  "key": "sessionKey",
+                  "value": "test-session-1"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Remove Cart Item",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/api/cart/items/1?sessionKey=test-session-1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "cart", "items", "1"],
+              "query": [
+                {
+                  "key": "sessionKey",
+                  "value": "test-session-1"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Orders",
+      "item": [
+        {
+          "name": "Create Order",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customerEmail\": \"buyer@example.com\",\n  \"customerName\": \"John Doe\",\n  \"phone\": \"0123456789\",\n  \"addressLine\": \"123 Main St\",\n  \"city\": \"Hanoi\",\n  \"province\": \"HN\",\n  \"postalCode\": \"100000\",\n  \"shippingFee\": 2.50,\n  \"items\": [\n    {\n      \"productId\": 1,\n      \"productTitle\": \"Sample Book\",\n      \"quantity\": 2,\n      \"price\": 20.00\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/orders",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "orders"]
+            }
+          }
+        },
+        {
+          "name": "Get Order by ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/orders/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "orders", "1"]
+            }
+          }
+        },
+        {
+          "name": "Cancel Order",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/api/orders/1/cancel",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "orders", "1", "cancel"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Payments",
+      "item": [
+        {
+          "name": "Create Payment (PayPal)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"orderId\": 1,\n  \"provider\": \"PAYPAL\",\n  \"amount\": 40.00,\n  \"currency\": \"USD\",\n  \"successReturnUrl\": \"http://localhost:3000/payment/success\",\n  \"cancelReturnUrl\": \"http://localhost:3000/payment/cancel\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/payments",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "payments"]
+            }
+          }
+        },
+        {
+          "name": "Capture Payment",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/api/payments/1/capture?providerReference=PAYPAL_ORDER_ID",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "payments", "1", "capture"],
+              "query": [
+                {
+                  "key": "providerReference",
+                  "value": "PAYPAL_ORDER_ID"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin",
+      "item": [
+        {
+          "name": "Admin - Create User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@example.com\",\n  \"password\": \"admin123\",\n  \"status\": \"ACTIVE\",\n  \"roles\": [\"ADMIN\"]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/users",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "admin", "users"]
+            }
+          }
+        },
+        {
+          "name": "Admin - List Users",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/users?page=0&size=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "admin", "users"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "20"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Admin - Get User by ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/users/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "admin", "users", "1"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

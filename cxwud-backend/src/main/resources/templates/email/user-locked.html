@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Account Locked</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .header {
+            background-color: #ffeeba;
+            padding: 10px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .content {
+            padding: 20px;
+        }
+
+        .footer {
+            font-size: 12px;
+            color: #777;
+            text-align: center;
+            margin-top: 20px;
+            border-top: 1px solid #ddd;
+            padding-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>Account Locked</h2>
+        </div>
+        <div class="content">
+            <p>Hello <strong th:text="${email}">User</strong>,</p>
+            <p>Your account has been temporarily locked by an administrator.</p>
+            <p>You cannot access the system while your account is locked.</p>
+            <p>Please contact support for assistance: <a th:href="'mailto:' + ${supportEmail}"
+                    th:text="${supportEmail}">support@example.com</a></p>
+        </div>
+        <div class="footer">
+            <p>This is an automated message, please do not reply.</p>
+            <p>&copy; 2025 AIMS System</p>
+        </div>
+    </div>
+</body>
+
+</html>

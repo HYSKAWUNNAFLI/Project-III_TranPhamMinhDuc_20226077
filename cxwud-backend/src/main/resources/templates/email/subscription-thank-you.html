@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Thank You for Subscribing</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+      }
+
+      .container {
+        max-width: 600px;
+        margin: 20px auto;
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .header {
+        text-align: center;
+        background-color: #007bff;
+        color: #ffffff;
+        padding: 10px 0;
+        border-radius: 8px 8px 0 0;
+      }
+
+      .content {
+        padding: 20px;
+        text-align: center;
+      }
+
+      .button {
+        display: inline-block;
+        padding: 10px 20px;
+        font-size: 16px;
+        color: #ffffff !important;
+        /* Đảm bảo màu chữ trắng trên nền xanh */
+        background-color: #28a745;
+        text-decoration: none;
+        border-radius: 5px;
+        margin-top: 20px;
+      }
+
+      .footer {
+        text-align: center;
+        font-size: 12px;
+        color: #777777;
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>Welcome to AIMS!</h1>
+      </div>
+      <div class="content">
+        <p>Hi there,</p>
+        <p>
+          Thank you for subscribing to our newsletter! We're excited to have you
+          on board.
+        </p>
+        <p>Stay tuned for the latest updates, exclusive offers, and more.</p>
+        <a th:href="@{https://aims-frontend-cxhp.onrender.com}" class="button"
+          >Go to Website</a
+        >
+      </div>
+      <div class="footer">
+        <p>&copy; 2025 AIMS. All rights reserved.</p>
+      </div>
+    </div>
+  </body>
+</html>

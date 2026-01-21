@@ -1,0 +1,57 @@
+spring:
+  application:
+    name: aims-backend
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
+  sql:
+    init:
+      mode: always
+      continue-on-error: true
+  security:
+    user:
+      email: admin
+      password: admin
+      roles: ADMIN,PRODUCT_MANAGER
+  liquibase:
+    change-log: classpath:/db/changelog/db.changelog-master.xml
+    enabled: true
+  data:
+    redis:
+      host: redis-15180.crce194.ap-seast-1-1.ec2.cloud.redislabs.com
+      port: 15180
+      username: default
+      password: QYJcX4k85plJKUmBl3GI7LWqRQouCziU
+
+server:
+  port: 8080
+
+security:
+  jwt:
+    secret-key: ${JWT_SECRET_KEY:aims-backend-super-secret-key-change-this-in-production-min-256-bits-required-for-hs256}
+    access-token-expiration: 900000 # 15 minutes
+    refresh-token-expiration: 604800000 # 7 days
+    issuer: aims-backend
+
+springdoc:
+  api-docs:
+    path: /api/docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+paypal:
+  base-url: ${PAYPAL_BASE_URL:https://api-m.sandbox.paypal.com}
+  client-id: ASmKQU2F4OqhMexo_uPkJnEGe6v8KLBIdadBYuXeOPMV6ZfJ4CWkQ0omUynbNO5boOVyww7dk8op7Y1L
+  client-secret: EHpV3RObVFJW5rQ6V0mpFbhV23j-SLolQdkTyS791sGaGc1c00PfWv1-clr1UxqceHzoeuzptfmzbUwz
+  currency: ${PAYPAL_CURRENCY:USD}
+  vnd-to-usd-rate: ${PAYPAL_VND_TO_USD_RATE:25000}
+
+vietqr:
+  base-url: ${VIETQR_BASE_URL:https://api.vietqr.io}
+  api-key: ${VIETQR_API_KEY:9d14a2e7-91da-4d9a-98aa-7ee453d03e53}
+  client-id: ${VIETQR_CLIENT_ID:0717633b-ecb5-4039-8b9c-c96f77a8d66d}
+  checksum-key: ${VIETQR_CHECKSUM_KEY:c82e9a823d9ef75fe324710e60aca92f59682aa5879edc1493b9611ab71c0e47}
+
+cloudinary:
+  cloud-name: ddlhbvrrc
+  api-key: 792864953667994
+  api-secret: 7_mKyuJsrcnSSK1kTRFz0e87jMY

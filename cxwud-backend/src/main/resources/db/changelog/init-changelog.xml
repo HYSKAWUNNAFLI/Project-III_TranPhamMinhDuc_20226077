@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.24.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <changeSet id="1765724859205-1" author="hiumonday">
+        <createTable tableName="book_details">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_book_details"/>
+            </column>
+            <column name="authors" type="VARCHAR(255)"/>
+            <column name="cover_type" type="VARCHAR(255)"/>
+            <column name="publisher" type="VARCHAR(255)"/>
+            <column name="publish_date" type="DATE"/>
+            <column name="page_count" type="INT"/>
+            <column name="language" type="VARCHAR(255)"/>
+            <column name="genre" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1765724859205-2" author="hiumonday">
+        <createTable tableName="cart_items">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_cart_items"/>
+            </column>
+            <column name="cart_id" type="BIGINT"/>
+            <column name="product_id" type="BIGINT"/>
+            <column name="quantity" type="INT"/>
+            <column name="price" type="DECIMAL"/>
+            <column name="total_price" type="DECIMAL"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1765724859205-3" author="hiumonday">
+        <createTable tableName="carts">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_carts"/>
+            </column>
+            <column name="session_key" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1765724859205-4" author="hiumonday">
+        <createTable tableName="cd_details">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_cd_details"/>
+            </column>
+            <column name="artist" type="VARCHAR(255)"/>
+            <column name="record_label" type="VARCHAR(255)"/>
+            <column name="tracks" type="VARCHAR(255)"/>
+            <column name="genre" type="VARCHAR(255)"/>
+            <column name="release_date" type="DATE"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1765724859205-5" author="hiumonday">
+        <createTable tableName="dvd_details">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_dvd_details"/>
+            </column>
+            <column name="disc_type" type="VARCHAR(255)"/>
+            <column name="director" type="VARCHAR(255)"/>
+            <column name="runtime_minutes" type="INT"/>
+            <column name="studio" type="VARCHAR(255)"/>
+            <column name="language" type="VARCHAR(255)"/>
+            <column name="subtitles" type="VARCHAR(255)"/>
+            <column name="release_date" type="DATE"/>
+            <column name="genre" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1765724859205-6" author="hiumonday">
+        <createTable tableName="invoices">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_invoices"/>
+            </column>
+            <column name="order_id" type="BIGINT"/>
+            <column name="total_before_vat" type="DECIMAL"/>
+            <column name="vat_amount" type="DECIMAL"/>
+            <column name="shipping_fee" type="DECIMAL"/>
+            <column name="total_with_vat" type="DECIMAL"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1765724859205-7" author="hiumonday">
+        <createTable tableName="newspaper_details">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_newspaper_details"/>
+            </column>
+            <column name="editor_in_chief" type="VARCHAR(255)"/>
+            <column name="publisher" type="VARCHAR(255)"/>
+            <column name="publish_date" type="DATE"/>
+            <column name="issue_number" type="VARCHAR(255)"/>
+            <column name="language" type="VARCHAR(255)"/>
+            <column name="sections" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1765724859205-8" author="hiumonday">
+        <createTable tableName="order_items">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_order_items"/>
+            </column>
+            <column name="order_id" type="BIGINT"/>
+            <column name="product_id" type="BIGINT"/>
+            <column name="product_title" type="VARCHAR(255)"/>
+            <column name="quantity" type="INT"/>
+            <column name="price" type="DECIMAL"/>
+            <column name="total_price" type="DECIMAL"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1765724859205-9" author="hiumonday">
+        <createTable tableName="orders">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_orders"/>
+            </column>
+            <column name="status" type="VARCHAR(255)"/>
+            <column name="customer_email" type="VARCHAR(255)"/>
+            <column name="customer_name" type="VARCHAR(255)"/>
+            <column name="customer_pass" type="VARCHAR(255)"/>
+            <column name="customer_phone" type="VARCHAR(255)"/>
+            <column name="shipping_fee" type="DECIMAL"/>
+            <column name="total_before_vat" type="DECIMAL"/>
+            <column name="total_with_vat" type="DECIMAL"/>
+            <column name="created_at" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="DATETIME"/>
+            <column name="recipient_name" type="VARCHAR(255)"/>
+            <column name="phone" type="VARCHAR(255)"/>
+            <column name="address_line" type="VARCHAR(255)"/>
+            <column name="city" type="VARCHAR(255)"/>
+            <column name="province" type="VARCHAR(255)"/>
+            <column name="postal_code" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1765724859205-10" author="hiumonday">
+        <createTable tableName="payment_transactions">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_payment_transactions"/>
+            </column>
+            <column name="order_id" type="BIGINT"/>
+            <column name="provider" type="VARCHAR(255)"/>
+            <column name="status" type="VARCHAR(255)"/>
+            <column name="amount" type="DECIMAL"/>
+            <column name="currency" type="VARCHAR(255)"/>
+            <column name="provider_reference" type="VARCHAR(255)"/>
+            <column name="qr_content" type="VARCHAR(255)"/>
+            <column name="capture_id" type="VARCHAR(255)"/>
+            <column name="created_at" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="DATETIME"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1765724859205-11" author="hiumonday">
+        <createTable tableName="product_history">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_product_history"/>
+            </column>
+            <column name="product_id" type="BIGINT"/>
+            <column name="action" type="VARCHAR(32)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="note" type="VARCHAR(255)"/>
+            <column name="created_at" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1765724859205-12" author="hiumonday">
+        <createTable tableName="products">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_products"/>
+            </column>
+            <column name="product_type" type="VARCHAR(32)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="VARCHAR(32)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="barcode" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="title" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="category" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="condition_label" type="VARCHAR(255)"/>
+            <column name="dominant_color" type="VARCHAR(255)"/>
+            <column name="return_policy" type="VARCHAR(255)"/>
+            <column name="height" type="DECIMAL"/>
+            <column name="width" type="DECIMAL"/>
+            <column name="length" type="DECIMAL"/>
+            <column name="weight" type="DECIMAL"/>
+            <column name="original_value" type="DECIMAL"/>
+            <column name="current_price" type="DECIMAL"/>
+            <column name="stock" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="book_detail_id" type="BIGINT"/>
+            <column name="newspaper_detail_id" type="BIGINT"/>
+            <column name="cd_detail_id" type="BIGINT"/>
+            <column name="dvd_detail_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1765724859205-13" author="hiumonday">
+        <createTable tableName="roles">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_roles"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1765724859205-14" author="hiumonday">
+        <createTable tableName="user_roles">
+            <column name="role_id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_user_roles"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_user_roles"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1765724859205-15" author="hiumonday">
+        <createTable tableName="users">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_users"/>
+            </column>
+            <column name="email" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password" type="VARCHAR(255)"/>
+            <column name="status" type="VARCHAR(255)"/>
+            <column name="created_at" type="DATETIME"/>
+            <column name="updated_at" type="DATETIME"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1765724859205-16" author="hiumonday">
+        <addUniqueConstraint columnNames="session_key" constraintName="uc_carts_sessionkey" tableName="carts"/>
+    </changeSet>
+    <changeSet id="1765724859205-17" author="hiumonday">
+        <addUniqueConstraint columnNames="order_id" constraintName="uc_invoices_order" tableName="invoices"/>
+    </changeSet>
+    <changeSet id="1765724859205-18" author="hiumonday">
+        <addUniqueConstraint columnNames="barcode" constraintName="uc_products_barcode" tableName="products"/>
+    </changeSet>
+    <changeSet id="1765724859205-19" author="hiumonday">
+        <addUniqueConstraint columnNames="book_detail_id" constraintName="uc_products_book_detail"
+                             tableName="products"/>
+    </changeSet>
+    <changeSet id="1765724859205-20" author="hiumonday">
+        <addUniqueConstraint columnNames="cd_detail_id" constraintName="uc_products_cd_detail" tableName="products"/>
+    </changeSet>
+    <changeSet id="1765724859205-21" author="hiumonday">
+        <addUniqueConstraint columnNames="dvd_detail_id" constraintName="uc_products_dvd_detail" tableName="products"/>
+    </changeSet>
+    <changeSet id="1765724859205-22" author="hiumonday">
+        <addUniqueConstraint columnNames="newspaper_detail_id" constraintName="uc_products_newspaper_detail"
+                             tableName="products"/>
+    </changeSet>
+    <changeSet id="1765724859205-23" author="hiumonday">
+        <addUniqueConstraint columnNames="name" constraintName="uc_roles_name" tableName="roles"/>
+    </changeSet>
+    <changeSet id="1765724859205-24" author="hiumonday">
+        <addUniqueConstraint columnNames="email" constraintName="uc_users_email" tableName="users"/>
+    </changeSet>
+    <changeSet id="1765724859205-25" author="hiumonday">
+        <addForeignKeyConstraint baseColumnNames="cart_id" baseTableName="cart_items"
+                                 constraintName="FK_CART_ITEMS_ON_CART" referencedColumnNames="id"
+                                 referencedTableName="carts"/>
+    </changeSet>
+    <changeSet id="1765724859205-26" author="hiumonday">
+        <addForeignKeyConstraint baseColumnNames="order_id" baseTableName="invoices"
+                                 constraintName="FK_INVOICES_ON_ORDER" referencedColumnNames="id"
+                                 referencedTableName="orders"/>
+    </changeSet>
+    <changeSet id="1765724859205-27" author="hiumonday">
+        <addForeignKeyConstraint baseColumnNames="order_id" baseTableName="order_items"
+                                 constraintName="FK_ORDER_ITEMS_ON_ORDER" referencedColumnNames="id"
+                                 referencedTableName="orders"/>
+    </changeSet>
+    <changeSet id="1765724859205-28" author="hiumonday">
+        <addForeignKeyConstraint baseColumnNames="book_detail_id" baseTableName="products"
+                                 constraintName="FK_PRODUCTS_ON_BOOK_DETAIL" referencedColumnNames="id"
+                                 referencedTableName="book_details"/>
+    </changeSet>
+    <changeSet id="1765724859205-29" author="hiumonday">
+        <addForeignKeyConstraint baseColumnNames="cd_detail_id" baseTableName="products"
+                                 constraintName="FK_PRODUCTS_ON_CD_DETAIL" referencedColumnNames="id"
+                                 referencedTableName="cd_details"/>
+    </changeSet>
+    <changeSet id="1765724859205-30" author="hiumonday">
+        <addForeignKeyConstraint baseColumnNames="dvd_detail_id" baseTableName="products"
+                                 constraintName="FK_PRODUCTS_ON_DVD_DETAIL" referencedColumnNames="id"
+                                 referencedTableName="dvd_details"/>
+    </changeSet>
+    <changeSet id="1765724859205-31" author="hiumonday">
+        <addForeignKeyConstraint baseColumnNames="newspaper_detail_id" baseTableName="products"
+                                 constraintName="FK_PRODUCTS_ON_NEWSPAPER_DETAIL" referencedColumnNames="id"
+                                 referencedTableName="newspaper_details"/>
+    </changeSet>
+    <changeSet id="1765724859205-32" author="hiumonday">
+        <addForeignKeyConstraint baseColumnNames="product_id" baseTableName="product_history"
+                                 constraintName="FK_PRODUCT_HISTORY_ON_PRODUCT" referencedColumnNames="id"
+                                 referencedTableName="products"/>
+    </changeSet>
+    <changeSet id="1765724859205-33" author="hiumonday">
+        <addForeignKeyConstraint baseColumnNames="role_id" baseTableName="user_roles" constraintName="fk_userol_on_role"
+                                 referencedColumnNames="id" referencedTableName="roles"/>
+    </changeSet>
+    <changeSet id="1765724859205-34" author="hiumonday">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="user_roles" constraintName="fk_userol_on_user"
+                                 referencedColumnNames="id" referencedTableName="users"/>
+    </changeSet>
+
+</databaseChangeLog>

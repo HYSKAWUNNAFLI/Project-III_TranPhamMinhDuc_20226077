@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.24.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <changeSet id="1768667948390-2" author="hiumonday">
+        <addColumn tableName="products">
+            <column name="description" type="TEXT"/>
+        </addColumn>
+
+        <dropIndex indexName="ix_notification_outbox_status_retry" tableName="notification_outbox"/>
+
+        <dropUniqueConstraint constraintName="uc_notification_outbox_idempotency" tableName="notification_outbox"/>
+    </changeSet>
+    <changeSet id="1768667948390-1" author="hiumonday">
+        <dropNotNullConstraint columnDataType="datetime" columnName="created_at" tableName="notification_outbox"/>
+    </changeSet>
+
+</databaseChangeLog>

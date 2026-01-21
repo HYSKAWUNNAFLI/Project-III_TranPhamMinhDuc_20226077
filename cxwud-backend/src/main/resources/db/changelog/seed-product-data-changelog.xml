@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.24.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <changeSet id="seed-product-types-20250201-01" author="codex">
+        <sql><![CDATA[
+            INSERT INTO product_types (code) VALUES
+                ('BOOK'),
+                ('NEWSPAPER'),
+                ('CD'),
+                ('DVD')
+            ON CONFLICT (code) DO NOTHING;
+        ]]></sql>
+    </changeSet>
+
+    <changeSet id="seed-products-20250201-01" author="codex">
+        <sql><![CDATA[
+            INSERT INTO products (
+                type_id,
+                status,
+                barcode,
+                title,
+                category,
+                condition_label,
+                dominant_color,
+                return_policy,
+                height,
+                width,
+                length,
+                weight,
+                original_value,
+                current_price,
+                stock,
+                attributes
+            ) VALUES
+                ((select id from product_types where code = 'BOOK'), 'ACTIVE', 'BK0001', '1984', 'Fiction',
+                 'new', 'black', '30-day return', 20.3, 13.1, 2.1, 0.35, 200000, 160000, 50,
+                 '{"authors":"George Orwell","cover_type":"paperback","publisher":"Secker & Warburg","publish_date":"1949-06-08","page_count":328,"language":"English","genre":"Dystopian"}'::jsonb),
+                ((select id from product_types where code = 'BOOK'), 'ACTIVE', 'BK0002', 'Clean Code', 'Programming',
+                 'new', 'white', '30-day return', 23.5, 17.8, 2.5, 0.70, 350000, 315000, 30,
+                 '{"authors":"Robert C. Martin","cover_type":"paperback","publisher":"Prentice Hall","publish_date":"2008-08-01","page_count":464,"language":"English","genre":"Software"}'::jsonb),
+                ((select id from product_types where code = 'BOOK'), 'ACTIVE', 'BK0003', 'The Pragmatic Programmer', 'Programming',
+                 'new', 'orange', '30-day return', 24.0, 17.0, 2.4, 0.65, 400000, 340000, 25,
+                 '{"authors":"Andrew Hunt, David Thomas","cover_type":"hardcover","publisher":"Addison-Wesley","publish_date":"1999-10-30","page_count":352,"language":"English","genre":"Software"}'::jsonb),
+                ((select id from product_types where code = 'BOOK'), 'ACTIVE', 'BK0004', 'Dune', 'Science Fiction',
+                 'used', 'brown', '15-day return', 19.8, 13.0, 3.4, 0.50, 250000, 175000, 40,
+                 '{"authors":"Frank Herbert","cover_type":"paperback","publisher":"Ace","publish_date":"1965-08-01","page_count":688,"language":"English","genre":"Sci-Fi"}'::jsonb),
+                ((select id from product_types where code = 'BOOK'), 'ACTIVE', 'BK0005', 'Norwegian Wood', 'Literature',
+                 'new', 'green', '30-day return', 20.0, 13.5, 2.2, 0.32, 180000, 150000, 35,
+                 '{"authors":"Haruki Murakami","cover_type":"paperback","publisher":"Kodansha","publish_date":"1987-09-04","page_count":296,"language":"Japanese","genre":"Drama"}'::jsonb),
+
+                ((select id from product_types where code = 'NEWSPAPER'), 'ACTIVE', 'NP0001', 'Daily Business', 'Business',
+                 'new', 'white', 'no return', 28.0, 21.0, 0.2, 0.20, 15000, 12000, 200,
+                 '{"editor_in_chief":"Nguyen An","publisher":"City Press","publish_date":"2025-01-10","issue_number":"2025-010","frequency":"daily","issn":"1234-5678","language":"Vietnamese","sections":["business","economy","market"]}'::jsonb),
+                ((select id from product_types where code = 'NEWSPAPER'), 'ACTIVE', 'NP0002', 'Morning Times', 'News',
+                 'new', 'white', 'no return', 28.0, 21.0, 0.2, 0.20, 12000, 10000, 180,
+                 '{"editor_in_chief":"Tran Binh","publisher":"Morning Media","publish_date":"2025-01-11","issue_number":"2025-011","frequency":"daily","issn":"2234-5678","language":"Vietnamese","sections":["politics","society","world"]}'::jsonb),
+                ((select id from product_types where code = 'NEWSPAPER'), 'ACTIVE', 'NP0003', 'Sports Weekly', 'Sports',
+                 'new', 'white', 'no return', 28.0, 21.0, 0.2, 0.20, 20000, 16000, 120,
+                 '{"editor_in_chief":"Le Duc","publisher":"Sports Media","publish_date":"2025-01-12","issue_number":"2025-W02","frequency":"weekly","issn":"1122-3344","language":"Vietnamese","sections":["football","basketball","tennis"]}'::jsonb),
+                ((select id from product_types where code = 'NEWSPAPER'), 'ACTIVE', 'NP0004', 'City Herald', 'Local',
+                 'new', 'white', 'no return', 28.0, 21.0, 0.2, 0.20, 13000, 11000, 160,
+                 '{"editor_in_chief":"Pham Ha","publisher":"Herald Group","publish_date":"2025-01-13","issue_number":"2025-013","frequency":"daily","issn":"3344-5566","language":"Vietnamese","sections":["local","traffic","community"]}'::jsonb),
+                ((select id from product_types where code = 'NEWSPAPER'), 'ACTIVE', 'NP0005', 'Tech Today', 'Technology',
+                 'new', 'white', 'no return', 28.0, 21.0, 0.2, 0.20, 18000, 14000, 140,
+                 '{"editor_in_chief":"Vo Nam","publisher":"Tech Media","publish_date":"2025-01-14","issue_number":"2025-W03","frequency":"weekly","issn":"7788-9900","language":"Vietnamese","sections":["startup","gadgets","ai"]}'::jsonb),
+
+                ((select id from product_types where code = 'CD'), 'ACTIVE', 'CD0001', 'Greatest Hits Vol 1', 'Music',
+                 'new', 'silver', '15-day return', 12.4, 14.2, 1.0, 0.10, 120000, 96000, 60,
+                 '{"artists":"Various Artists","record_label":"Universal","tracks":[{"title":"Track One","length":"03:45"},{"title":"Track Two","length":"04:10"},{"title":"Track Three","length":"03:30"}],"genre":"Pop","release_date":"2015-05-10"}'::jsonb),
+                ((select id from product_types where code = 'CD'), 'ACTIVE', 'CD0002', 'Classical Essentials', 'Classical',
+                 'new', 'silver', '15-day return', 12.4, 14.2, 1.0, 0.10, 150000, 120000, 40,
+                 '{"artists":"Various Artists","record_label":"Sony Classical","tracks":[{"title":"Symphony No.5","length":"07:20"},{"title":"Canon in D","length":"05:55"}],"genre":"Classical","release_date":"2012-11-01"}'::jsonb),
+                ((select id from product_types where code = 'CD'), 'ACTIVE', 'CD0003', 'Jazz Nights', 'Jazz',
+                 'new', 'silver', '15-day return', 12.4, 14.2, 1.0, 0.10, 130000, 104000, 55,
+                 '{"artists":"Blue Quartet","record_label":"Blue Note","tracks":[{"title":"Midnight Jam","length":"04:40"},{"title":"Smooth Walk","length":"05:15"}],"genre":"Jazz","release_date":"2018-06-20"}'::jsonb),
+                ((select id from product_types where code = 'CD'), 'ACTIVE', 'CD0004', 'Acoustic Vibes', 'Acoustic',
+                 'new', 'silver', '15-day return', 12.4, 14.2, 1.0, 0.10, 110000, 99000, 50,
+                 '{"artists":"Acoustic Trio","record_label":"Indie Sound","tracks":[{"title":"Morning Light","length":"03:25"},{"title":"Calm Sea","length":"04:05"}],"genre":"Acoustic","release_date":"2020-03-15"}'::jsonb),
+                ((select id from product_types where code = 'CD'), 'ACTIVE', 'CD0005', 'Rock Legends', 'Rock',
+                 'new', 'silver', '15-day return', 12.4, 14.2, 1.0, 0.10, 140000, 112000, 45,
+                 '{"artists":"Rock Legends","record_label":"Road Records","tracks":[{"title":"Fire Road","length":"04:50"},{"title":"High Voltage","length":"05:05"}],"genre":"Rock","release_date":"2016-09-09"}'::jsonb),
+
+                ((select id from product_types where code = 'DVD'), 'ACTIVE', 'DVD0001', 'Inception', 'Sci-Fi',
+                 'new', 'blue', '30-day return', 19.0, 13.5, 1.4, 0.10, 150000, 135000, 70,
+                 '{"disc_type":"Blu-ray","director":"Christopher Nolan","runtime_minutes":148,"studio":"Warner Bros","language":"English","subtitles":["English","Vietnamese"],"release_date":"2010-07-16","genre":"Sci-Fi"}'::jsonb),
+                ((select id from product_types where code = 'DVD'), 'ACTIVE', 'DVD0002', 'The Matrix', 'Sci-Fi',
+                 'new', 'black', '30-day return', 19.0, 13.5, 1.4, 0.10, 140000, 112000, 65,
+                 '{"disc_type":"DVD","director":"Wachowski Sisters","runtime_minutes":136,"studio":"Warner Bros","language":"English","subtitles":["English"],"release_date":"1999-03-31","genre":"Sci-Fi"}'::jsonb),
+                ((select id from product_types where code = 'DVD'), 'ACTIVE', 'DVD0003', 'Interstellar', 'Sci-Fi',
+                 'new', 'black', '30-day return', 19.0, 13.5, 1.4, 0.10, 160000, 128000, 60,
+                 '{"disc_type":"Blu-ray","director":"Christopher Nolan","runtime_minutes":169,"studio":"Paramount","language":"English","subtitles":["English","Vietnamese"],"release_date":"2014-11-07","genre":"Sci-Fi"}'::jsonb),
+                ((select id from product_types where code = 'DVD'), 'ACTIVE', 'DVD0004', 'Spirited Away', 'Animation',
+                 'new', 'blue', '30-day return', 19.0, 13.5, 1.4, 0.10, 130000, 104000, 55,
+                 '{"disc_type":"Blu-ray","director":"Hayao Miyazaki","runtime_minutes":125,"studio":"Studio Ghibli","language":"Japanese","subtitles":["English"],"release_date":"2001-07-20","genre":"Animation"}'::jsonb),
+                ((select id from product_types where code = 'DVD'), 'ACTIVE', 'DVD0005', 'The Godfather', 'Crime',
+                 'new', 'black', '30-day return', 19.0, 13.5, 1.4, 0.10, 150000, 120000, 50,
+                 '{"disc_type":"DVD","director":"Francis Ford Coppola","runtime_minutes":175,"studio":"Paramount","language":"English","subtitles":["English"],"release_date":"1972-03-24","genre":"Crime"}'::jsonb);
+        ]]></sql>
+    </changeSet>
+</databaseChangeLog>

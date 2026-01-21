@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.24.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+
+    <changeSet id="1768580985301-1" author="huygdo">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="invoices" columnName="address_line"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="invoices">
+            <column name="address_line" type="VARCHAR(255)"/>
+            <column name="city" type="VARCHAR(255)"/>
+            <column name="phone" type="VARCHAR(255)"/>
+            <column name="postal_code" type="VARCHAR(255)"/>
+            <column name="province" type="VARCHAR(255)"/>
+            <column name="recipient_name" type="VARCHAR(255)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="1768580985301-7-1" author="huygdo">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="orders" columnName="address_line"/>
+        </preConditions>
+        <dropColumn columnName="address_line" tableName="orders"/>
+    </changeSet>
+
+    <changeSet id="1768580985301-7-2" author="huygdo">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="orders" columnName="city"/>
+        </preConditions>
+        <dropColumn columnName="city" tableName="orders"/>
+    </changeSet>
+
+    <changeSet id="1768580985301-7-3" author="huygdo">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="orders" columnName="phone"/>
+        </preConditions>
+        <dropColumn columnName="phone" tableName="orders"/>
+    </changeSet>
+
+    <changeSet id="1768580985301-7-4" author="huygdo">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="orders" columnName="postal_code"/>
+        </preConditions>
+        <dropColumn columnName="postal_code" tableName="orders"/>
+    </changeSet>
+
+    <changeSet id="1768580985301-7-5" author="huygdo">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="orders" columnName="province"/>
+        </preConditions>
+        <dropColumn columnName="province" tableName="orders"/>
+    </changeSet>
+
+    <changeSet id="1768580985301-7-6" author="huygdo">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="orders" columnName="recipient_name"/>
+        </preConditions>
+        <dropColumn columnName="recipient_name" tableName="orders"/>
+    </changeSet>
+
+</databaseChangeLog>

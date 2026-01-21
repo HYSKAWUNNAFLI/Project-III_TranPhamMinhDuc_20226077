@@ -1,0 +1,146 @@
+.modal-large {
+    max-width: 900px;
+}
+
+.form-sections {
+    padding: 2rem;
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+.form-section {
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+.form-section:last-child {
+    border-bottom: none;
+}
+
+.section-title {
+    margin: 0 0 1.5rem 0;
+    font-size: 1.25rem;
+    color: #667eea;
+    font-weight: 700;
+}
+
+.type-specific {
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+    padding: 1.5rem;
+    border-radius: 12px;
+    border: 2px dashed #667eea;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.form-group textarea {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    transition: all 0.3s;
+    font-family: inherit;
+    resize: vertical;
+}
+
+.form-group textarea:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.field-hint {
+    display: block;
+    font-size: 0.8rem;
+    color: #999;
+    margin-top: 0.25rem;
+}
+
+.form-sections::-webkit-scrollbar {
+    width: 8px;
+}
+
+.form-sections::-webkit-scrollbar-track {
+    background: #f0f0f0;
+    border-radius: 4px;
+}
+
+.form-sections::-webkit-scrollbar-thumb {
+    background: #667eea;
+    border-radius: 4px;
+}
+
+.form-sections::-webkit-scrollbar-thumb:hover {
+    background: #5568d3;
+}
+
+/* Stock Change Warning Styles */
+.stock-change-warning {
+    background: linear-gradient(135deg, rgba(255, 193, 7, 0.1) 0%, rgba(255, 152, 0, 0.1) 100%);
+    border: 2px solid #ffc107;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin: 1.5rem 2rem;
+}
+
+.warning-header {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #f57c00;
+    margin-bottom: 1rem;
+}
+
+.stock-comparison {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: rgba(255, 255, 255, 0.7);
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+}
+
+.stock-label {
+    color: #333;
+}
+
+.stock-arrow {
+    color: #999;
+    font-size: 1.25rem;
+}
+
+.stock-delta {
+    font-weight: 700;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+}
+
+.stock-delta.positive {
+    background: rgba(76, 175, 80, 0.2);
+    color: #2e7d32;
+}
+
+.stock-delta.negative {
+    background: rgba(244, 67, 54, 0.2);
+    color: #c62828;
+}
+
+.stock-change-warning textarea.error {
+    border-color: #f44336;
+    background: rgba(244, 67, 54, 0.05);
+}
+
+.error-text {
+    display: block;
+    color: #c62828;
+    font-size: 0.85rem;
+    margin-top: 0.25rem;
+}

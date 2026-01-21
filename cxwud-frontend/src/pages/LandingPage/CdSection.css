@@ -1,0 +1,319 @@
+/* --- Variables & Fonts --- */
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap');
+
+.dark-vinyl-lounge {
+  --v-bg: #120f0d;
+  --v-wood-dark: #3e2b22;
+  --v-wood-light: #5c4033;
+  --v-gold: #c5a059;
+  --v-mesh-dark: #2a1f18;
+  --v-mesh-light: #4a362a;
+  
+  background-color: var(--v-bg);
+  color: #e0e0e0;
+  font-family: 'Space Grotesk', sans-serif;
+  height: 100vh;
+  min-height: 700px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Lớp phủ mờ */
+.vignette-overlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.6) 80%, #000 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.vinyl-container {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+  width: 100%;
+  max-width: 900px;
+  padding: 0 24px;
+}
+
+/* --- Header Text --- */
+.vinyl-header { text-align: center; }
+.vinyl-eyebrow {
+  font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase;
+  color: var(--v-gold); margin-bottom: 12px; font-weight: 700;
+  text-shadow: 0 0 10px rgba(197, 160, 89, 0.3);
+}
+.vinyl-title {
+  font-size: clamp(36px, 5vw, 64px); line-height: 1.1; text-transform: uppercase;
+  color: #f0e6d2; margin: 0 0 16px 0; font-weight: 700;
+}
+.vinyl-desc {
+  font-size: 15px; color: #8c8c8c; max-width: 460px; margin: 0 auto; line-height: 1.6;
+}
+.vinyl-desc strong { color: var(--v-gold); }
+
+/* --- TURNTABLE UNIT (MÁY ĐĨA THAN) --- */
+.turntable-unit {
+  width: 100%;
+  /* 1. TRỤC OX (NGANG): Giữ gọn gàng như cũ */
+  max-width: 480px; 
+  perspective: 1200px;
+  position: relative;
+  user-select: none;
+  margin-bottom: 20px;
+}
+
+/* 2. TRỤC OY (DỌC/SÂU): Tăng chiều cao surface lên đáng kể */
+.turntable-surface {
+  width: 100%;
+  height: 280px; /* Tăng độ sâu (Oy) để chứa cần dài */
+  background: repeating-linear-gradient(
+    90deg, 
+    var(--v-wood-dark), 
+    var(--v-wood-dark) 2px, 
+    var(--v-wood-light) 4px,
+    var(--v-wood-dark) 8px
+  );
+  border-radius: 8px 8px 0 0;
+  position: relative;
+  transform: rotateX(25deg); 
+  transform-origin: bottom center;
+  box-shadow: inset 0 0 50px rgba(0,0,0,0.9); /* Bóng đổ sâu hơn */
+  border: 1px solid rgba(255,255,255,0.05);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2;
+  transform-style: preserve-3d;
+}
+
+/* Nắp chống bụi (Cập nhật theo chiều cao mới) */
+.dust-cover-hint {
+  position: absolute;
+  top: -140px; /* Dịch lên cao hơn do surface cao hơn */
+  left: 0; right: 0;
+  height: 280px; /* Match height với surface */
+  background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, transparent 60%);
+  transform: rotateX(25deg) translateY(-20px) scale(0.95);
+  transform-origin: bottom center;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 8px 8px 0 0;
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+/* 3. Mâm xoay & Đĩa than */
+.platter-base {
+  width: 200px; height: 200px;
+  background: #111;
+  border-radius: 50%;
+  border: 4px solid #080808;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+  display: flex; justify-content: center; align-items: center;
+  position: relative;
+  /* Dịch sang trái một chút để nhường chỗ cho cần siêu dài bên phải */
+  transform: translateX(-30px) translateZ(2px); 
+}
+
+.vinyl-record {
+  width: 190px; height: 190px;
+  border-radius: 50%; background: #080808;
+  position: relative; cursor: default;
+}
+.vinyl-record:active { cursor: grabbing; }
+
+.vinyl-grooves {
+  position: absolute; inset: 2px; border-radius: 50%;
+  background: repeating-radial-gradient(#111, #111 2px, #222 3px);
+}
+.vinyl-reflection {
+  position: absolute; inset: 0; border-radius: 50%;
+  background: conic-gradient(
+    transparent 0deg, rgba(255,255,255,0.1) 40deg, transparent 70deg,
+    transparent 180deg, rgba(255,255,255,0.1) 220deg, transparent 250deg
+  );
+  pointer-events: none;
+}
+.vinyl-label {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  width: 70px; height: 70px; background: #d4c5a0; border-radius: 50%;
+  display: flex; flex-direction: column; justify-content: center; align-items: center;
+  text-align: center; box-shadow: 0 0 0 2px rgba(0,0,0,0.3);
+}
+.label-top { font-size: 6px; font-weight: 700; margin-bottom: 2px; color: #333; }
+.label-song { font-size: 8px; line-height: 1.1; color: #000; font-weight: 700; max-width: 80%; }
+.label-artist { font-size: 6px; margin-top: 2px; color: #555; }
+.spindle {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  width: 6px; height: 6px; background: #ccc; border-radius: 50%;
+  box-shadow: 1px 1px 2px rgba(0,0,0,0.5); z-index: 10;
+}
+.spinning { animation: spin 2s linear infinite; }
+
+
+/* 4. CẦN ĐĨA (TONEARM) - CỰC DÀI & VỊ TRÍ MỚI */
+.tonearm-assembly {
+  position: absolute;
+  top: 20px; /* Đặt sát mép trên cùng (xa về phía sau theo phối cảnh) */
+  right: 20px; /* Đặt sát mép phải */
+  width: 40px;
+  
+  /* TĂNG CHIỀU DÀI CẦN THÊM NỮA */
+  height: 240px; 
+  
+  z-index: 10;
+  transform-origin: 20px 15px; 
+  
+  /* Góc nghỉ: -30 độ */
+  transform: rotate(-30deg) translateZ(10px);
+  transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+  transform-style: preserve-3d;
+}
+
+/* Animation di chuyển vào */
+.tonearm-assembly.arm-moving {
+    animation: moveArmIn 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Trạng thái active */
+.tonearm-assembly.arm-active {
+    /* Góc hoạt động: 60 độ. Tổng di chuyển 90 độ */
+    transform: rotate(60deg) translateZ(10px); 
+    animation: lowerArm 0.5s ease-out forwards;
+}
+
+@keyframes moveArmIn {
+    0% { transform: rotate(-30deg) translateZ(10px); }
+    100% { transform: rotate(60deg) translateZ(10px); }
+}
+
+@keyframes lowerArm {
+    0% { transform: rotate(60deg) rotateX(0deg) translateZ(10px); }
+    /* Góc hạ kim nhỏ hơn vì cần dài hơn */
+    100% { transform: rotate(60deg) rotateX(8deg) translateZ(10px); }
+}
+
+/* Các bộ phận cần */
+.pivot-base {
+  position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+  width: 34px; height: 34px; background: #1a1a1a; border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.6); border: 1px solid #333;
+}
+
+.arm-rod {
+  position: absolute; top: 15px; left: 50%; width: 6px;
+  
+  /* Tăng chiều dài thanh kim loại */
+  height: 210px; 
+  
+  background: linear-gradient(90deg, #888, #e0e0e0, #888);
+  transform: translateX(-50%);
+  box-shadow: 2px 4px 8px rgba(0,0,0,0.4);
+}
+
+.counterweight {
+  position: absolute; top: 5px; left: 50%; transform: translateX(-50%);
+  width: 16px; height: 24px; background: #222; border-radius: 2px;
+}
+.headshell {
+  position: absolute; bottom: 0; left: 50%;
+  transform: translateX(-50%) rotate(25deg);
+  width: 14px; height: 26px; background: #111; border-radius: 2px;
+}
+.cartridge {
+  width: 4px; height: 6px; background: #d00; margin: 22px auto 0;
+  box-shadow: 0 0 2px rgba(0,0,0,0.5);
+}
+
+
+/* 5. Controls mặt trên */
+.control-cluster {
+    position: absolute;
+    bottom: 30px; /* Dịch xuống thấp vì mặt máy sâu hơn */
+    right: 30px; 
+    display: flex; flex-direction: column; align-items: center;
+    gap: 12px; transform: translateZ(2px);
+}
+
+.speed-switch {
+    display: flex; align-items: center; gap: 6px; font-size: 8px; color: #888;
+}
+.switch-knob {
+    width: 6px; height: 12px; background: #333; border: 1px solid #555; border-radius: 1px;
+}
+.power-light {
+    width: 6px; height: 6px; background: #ff4d4d; border-radius: 50%;
+    transition: all 0.3s; box-shadow: inset 0 1px 2px rgba(0,0,0,0.5);
+}
+
+
+/* 6. Thân máy mặt trước (Body Front) */
+.turntable-body-front {
+  height: 90px;
+  background: var(--v-wood-dark);
+  background-image: repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(0,0,0,0.2) 4px, transparent 8px);
+  margin-top: -10px; position: relative; border-radius: 0 0 8px 8px;
+  box-shadow: 0 30px 60px rgba(0,0,0,0.6);
+  display: flex; align-items: center; padding: 0 24px; gap: 20px; z-index: 3;
+}
+
+.speaker-mesh {
+  flex-grow: 1; height: 60px; background: var(--v-mesh-dark);
+  background-image: linear-gradient(45deg, var(--v-mesh-light) 25%, transparent 25%, transparent 75%, var(--v-mesh-light) 75%), 
+                    linear-gradient(45deg, var(--v-mesh-light) 25%, transparent 25%, transparent 75%, var(--v-mesh-light) 75%);
+  background-size: 4px 4px; border-radius: 4px;
+  box-shadow: inset 0 2px 5px rgba(0,0,0,0.8); border: 1px solid rgba(255,255,255,0.05);
+}
+
+.front-controls { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.volume-knob {
+  width: 44px; height: 44px; background: radial-gradient(circle, #2a2a2a, #000);
+  border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,0.5); position: relative;
+  cursor: pointer; border: 1px solid #333; transition: transform 0.1s;
+}
+.volume-knob:active { transform: scale(0.95); }
+.knob-line {
+  position: absolute; top: 6px; left: 50%; width: 2px; height: 14px; background: #fff;
+  transform-origin: center 16px; transition: transform 0.5s ease;
+}
+.knob-label { font-size: 8px; letter-spacing: 1px; color: #888; font-weight: 700; }
+
+
+/* Footer & Hints */
+.vinyl-footer { margin-top: 10px; }
+.gold-link {
+  color: var(--v-gold); text-decoration: none; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 1px; border-bottom: 1px solid rgba(197, 160, 89, 0.3); padding-bottom: 2px; transition: all 0.3s;
+}
+.gold-link:hover { color: #fff; border-color: #fff; text-shadow: 0 0 8px rgba(255,255,255,0.5); }
+.gold-hint {
+  position: absolute; bottom: 24px; display: flex; flex-direction: column; align-items: center;
+  gap: 8px; font-size: 10px; text-transform: uppercase; letter-spacing: 0.15em; color: var(--v-gold); opacity: 0.7;
+}
+.scroll-line-gold { width: 1px; height: 30px; background: linear-gradient(to bottom, var(--v-gold), transparent); }
+
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+/* Responsive Mobile */
+@media (max-width: 768px) {
+  /* Mobile: Giữ tỷ lệ "Sâu và Gọn" */
+  .turntable-unit { max-width: 340px; }
+  .turntable-surface { height: 220px; } /* Mobile cũng tăng chiều sâu */
+  .turntable-body-front { height: 70px; }
+  .vinyl-record { width: 140px; height: 140px; }
+  .platter-base { width: 150px; height: 150px; transform: translateX(-15px) translateZ(2px); }
+  
+  /* Cần trên mobile */
+  .tonearm-assembly { height: 190px; right: 15px; } 
+  .arm-rod { height: 160px; }
+  
+  .speaker-mesh { height: 40px; }
+  .vinyl-title { font-size: 32px; }
+}

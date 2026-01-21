@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.24.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+
+    <changeSet id="seed-product-types-20250201-02" author="codex">
+        <sql><![CDATA[
+            INSERT INTO product_types (code) VALUES
+                ('BOOK'),
+                ('NEWSPAPER'),
+                ('CD'),
+                ('DVD')
+            ON CONFLICT (code) DO NOTHING;
+        ]]></sql>
+    </changeSet>
+
+    <changeSet id="seed-type-attributes-20250201-01" author="codex">
+        <sql><![CDATA[
+            -- Use CTE to look up IDs dynamically so this works even if IDs change
+            WITH types AS (
+                SELECT id, code FROM product_types
+            )
+            INSERT INTO type_attributes (type_id, attribute_key, label, data_type, is_required)
+            VALUES
+                -- BOOK Attributes
+                ((SELECT id FROM types WHERE code = 'BOOK'), 'authors', 'Authors', 'string', true),
+                ((SELECT id FROM types WHERE code = 'BOOK'), 'cover_type', 'Cover Type', 'string', true),
+                ((SELECT id FROM types WHERE code = 'BOOK'), 'publisher', 'Publisher', 'string', true),
+                ((SELECT id FROM types WHERE code = 'BOOK'), 'publish_date', 'Publication Date', 'date', true),
+                ((SELECT id FROM types WHERE code = 'BOOK'), 'page_count', 'Page Count', 'integer', false),
+                ((SELECT id FROM types WHERE code = 'BOOK'), 'language', 'Language', 'string', false),
+                ((SELECT id FROM types WHERE code = 'BOOK'), 'genre', 'Genre', 'string', false),
+
+                -- NEWSPAPER Attributes
+                ((SELECT id FROM types WHERE code = 'NEWSPAPER'), 'editor_in_chief', 'Editor in Chief', 'string', true),
+                ((SELECT id FROM types WHERE code = 'NEWSPAPER'), 'publisher', 'Publisher', 'string', true),
+                ((SELECT id FROM types WHERE code = 'NEWSPAPER'), 'publish_date', 'Publication Date', 'date', true),
+                ((SELECT id FROM types WHERE code = 'NEWSPAPER'), 'issue_number', 'Issue Number', 'string', false),
+                ((SELECT id FROM types WHERE code = 'NEWSPAPER'), 'frequency', 'Frequency', 'string', false),
+                ((SELECT id FROM types WHERE code = 'NEWSPAPER'), 'issn', 'ISSN', 'string', false),
+                ((SELECT id FROM types WHERE code = 'NEWSPAPER'), 'language', 'Language', 'string', false),
+                ((SELECT id FROM types WHERE code = 'NEWSPAPER'), 'sections', 'Sections', 'array', false),
+
+                -- CD Attributes
+                ((SELECT id FROM types WHERE code = 'CD'), 'artists', 'Artists', 'string', true),
+                ((SELECT id FROM types WHERE code = 'CD'), 'record_label', 'Record Label', 'string', true),
+                ((SELECT id FROM types WHERE code = 'CD'), 'tracks', 'Track List', 'json', true),
+                ((SELECT id FROM types WHERE code = 'CD'), 'genre', 'Genre', 'string', true),
+                ((SELECT id FROM types WHERE code = 'CD'), 'release_date', 'Release Date', 'date', false),
+
+                -- DVD Attributes
+                ((SELECT id FROM types WHERE code = 'DVD'), 'disc_type', 'Disc Type', 'string', true),
+                ((SELECT id FROM types WHERE code = 'DVD'), 'director', 'Director', 'string', true),
+                ((SELECT id FROM types WHERE code = 'DVD'), 'runtime_minutes', 'Runtime (min)', 'integer', true),
+                ((SELECT id FROM types WHERE code = 'DVD'), 'studio', 'Studio', 'string', true),
+                ((SELECT id FROM types WHERE code = 'DVD'), 'language', 'Language', 'string', true),
+                ((SELECT id FROM types WHERE code = 'DVD'), 'subtitles', 'Subtitles', 'array', false),
+                ((SELECT id FROM types WHERE code = 'DVD'), 'release_date', 'Release Date', 'date', false),
+                ((SELECT id FROM types WHERE code = 'DVD'), 'genre', 'Genre', 'string', false)
+
+            -- Upsert logic: Update definition if key already exists
+            ON CONFLICT (type_id, attribute_key) DO UPDATE SET
+                label = EXCLUDED.label,
+                data_type = EXCLUDED.data_type,
+                is_required = EXCLUDED.is_required;
+        ]]></sql>
+    </changeSet>
+
+</databaseChangeLog>

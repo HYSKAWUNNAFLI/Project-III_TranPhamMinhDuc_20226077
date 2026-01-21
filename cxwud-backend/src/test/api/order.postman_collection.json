@@ -1,0 +1,1000 @@
+{
+	"info": {
+		"name": "AIMS - Order Management APIs",
+		"description": "API collection for Order management, payment integration, and stock handling with pessimistic locking",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{auth_token}}",
+				"type": "string"
+			}
+		]
+	},
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8080",
+			"type": "string"
+		},
+		{
+			"key": "auth_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "order_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "product_id_1",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "product_id_2",
+			"value": "2",
+			"type": "string"
+		},
+		{
+			"key": "payment_transaction_id",
+			"value": "",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "Order Management",
+			"item": [
+				{
+					"name": "Create Order - Single Product",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    pm.collectionVariables.set('order_id', jsonData.data.id);",
+									"    pm.collectionVariables.set('payment_transaction_id', jsonData.data.paymentTransactionId);",
+									"    console.log('Order ID: ' + jsonData.data.id);",
+									"    console.log('Payment Transaction ID: ' + jsonData.data.paymentTransactionId);",
+									"    console.log('Payment Status: ' + jsonData.data.paymentStatus);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"customerEmail\": \"customer@example.com\",\n  \"customerName\": \"Nguyen Van A\",\n  \"phone\": \"0901234567\",\n  \"addressLine\": \"123 Nguyen Trai Street\",\n  \"city\": \"Ha Noi\",\n  \"province\": \"Ha Noi\",\n  \"postalCode\": \"100000\",\n  \"cartSessionKey\": \"test-cart-session-123\",\n  \"items\": [\n    {\n      \"productId\": {{product_id_1}},\n      \"quantity\": 2,\n      \"price\": 450000\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/orders",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Order - Multiple Products",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    pm.collectionVariables.set('order_id', jsonData.data.id);",
+									"    pm.collectionVariables.set('payment_transaction_id', jsonData.data.paymentTransactionId);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"customerEmail\": \"customer@example.com\",\n  \"customerName\": \"Tran Thi B\",\n  \"phone\": \"0912345678\",\n  \"addressLine\": \"456 Le Loi Street\",\n  \"city\": \"Ho Chi Minh\",\n  \"province\": \"Ho Chi Minh\",\n  \"postalCode\": \"700000\",\n  \"cartSessionKey\": \"test-cart-session-456\",\n  \"items\": [\n    {\n      \"productId\": {{product_id_1}},\n      \"quantity\": 1,\n      \"price\": 450000\n    },\n    {\n      \"productId\": {{product_id_2}},\n      \"quantity\": 3,\n      \"price\": 180000\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/orders",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Order - Same Product Multiple Times",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    console.log('Order created with aggregated quantities');",
+									"    console.log('Total items in order: ' + jsonData.data.items.length);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"customerEmail\": \"customer@example.com\",\n  \"customerName\": \"Le Van C\",\n  \"phone\": \"0923456789\",\n  \"addressLine\": \"789 Tran Hung Dao Street\",\n  \"city\": \"Da Nang\",\n  \"province\": \"Da Nang\",\n  \"postalCode\": \"550000\",\n  \"cartSessionKey\": \"test-cart-session-789\",\n  \"items\": [\n    {\n      \"productId\": {{product_id_1}},\n      \"quantity\": 2,\n      \"price\": 450000\n    },\n    {\n      \"productId\": {{product_id_1}},\n      \"quantity\": 3,\n      \"price\": 450000\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/orders",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Order by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/orders/{{order_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"orders",
+								"{{order_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List All Orders",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/orders?page=0&size=20",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"orders"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "20"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cancel Order (PENDING_PROCESSING)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    console.log('Order cancelled, stock restored');",
+									"    console.log('Order Status: ' + jsonData.data.status);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/orders/{{order_id}}/cancel",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"orders",
+								"{{order_id}}",
+								"cancel"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Stock & Concurrency Tests",
+			"item": [
+				{
+					"name": "Create Order - Out of Stock (Should Fail)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 409) {",
+									"    console.log('Expected failure: Out of stock');",
+									"    var jsonData = pm.response.json();",
+									"    console.log('Error: ' + jsonData.message);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"customerEmail\": \"customer@example.com\",\n  \"customerName\": \"Test User\",\n  \"phone\": \"0901234567\",\n  \"addressLine\": \"123 Test Street\",\n  \"city\": \"Ha Noi\",\n  \"province\": \"Ha Noi\",\n  \"postalCode\": \"100000\",\n  \"items\": [\n    {\n      \"productId\": {{product_id_1}},\n      \"quantity\": 99999,\n      \"price\": 450000\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/orders",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Order - Deactivated Product (Should Fail)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 400) {",
+									"    console.log('Expected failure: Product is deactivated');",
+									"    var jsonData = pm.response.json();",
+									"    console.log('Error: ' + jsonData.message);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"customerEmail\": \"customer@example.com\",\n  \"customerName\": \"Test User\",\n  \"phone\": \"0901234567\",\n  \"addressLine\": \"123 Test Street\",\n  \"city\": \"Ha Noi\",\n  \"province\": \"Ha Noi\",\n  \"postalCode\": \"100000\",\n  \"items\": [\n    {\n      \"productId\": 999,\n      \"quantity\": 1,\n      \"price\": 100000\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/orders",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"orders"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Payment Webhook Simulation",
+			"item": [
+				{
+					"name": "Mock - Payment Captured (Success)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    console.log('✅ Payment captured successfully');",
+									"    console.log('Message: ' + jsonData.data);",
+									"    console.log('Order should now be PAID');",
+									"    console.log('PaymentTransaction should now be CAPTURED');",
+									"    ",
+									"    pm.test('Webhook processed successfully', function() {",
+									"        pm.expect(jsonData.success).to.be.true;",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"orderId\": {{order_id}},\n  \"provider\": \"PAYPAL\",\n  \"providerReference\": \"PAYPAL_ORDER_12345\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/webhooks/mock/payment-captured",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"webhooks",
+								"mock",
+								"payment-captured"
+							]
+						},
+						"description": "Simulates successful payment capture from PayPal/VietQR.\n\nWhat it does:\n- Updates PaymentTransaction status → CAPTURED\n- Sets providerReference and webhookReceivedAt\n- Stores webhook payload in rawPayload\n- Calls OrderPaymentService.handlePaymentCaptured()\n- Updates Order status → PAID\n- **CLEARS CART** if cartSessionKey was provided"
+					},
+					"response": []
+				},
+				{
+					"name": "Mock - Payment Timeout (Expired)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    console.log('✅ Payment timeout processed');",
+									"    console.log('Message: ' + jsonData.data);",
+									"    console.log('Order should now be CANCELLED');",
+									"    console.log('PaymentTransaction should now be FAILED');",
+									"    console.log('Stock should be RESTORED');",
+									"    ",
+									"    pm.test('Webhook processed successfully', function() {",
+									"        pm.expect(jsonData.success).to.be.true;",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"orderId\": {{order_id}},\n  \"provider\": \"VIETQR\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/webhooks/mock/payment-timeout",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"webhooks",
+								"mock",
+								"payment-timeout"
+							]
+						},
+						"description": "Simulates payment link expiration (user didn't complete payment in time).\n\nWhat it does:\n- Updates PaymentTransaction status → FAILED\n- Stores webhook payload in rawPayload\n- Calls OrderPaymentService.handlePaymentTimeout()\n- Updates Order status → CANCELLED\n- **RESTORES STOCK** to inventory"
+					},
+					"response": []
+				},
+				{
+					"name": "Mock - User Cancelled Payment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    console.log('✅ Payment cancellation processed');",
+									"    console.log('Message: ' + jsonData.data);",
+									"    console.log('Order should now be CANCELLED');",
+									"    console.log('PaymentTransaction should now be FAILED');",
+									"    console.log('Stock should be RESTORED');",
+									"    ",
+									"    pm.test('Webhook processed successfully', function() {",
+									"        pm.expect(jsonData.success).to.be.true;",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"orderId\": {{order_id}},\n  \"provider\": \"PAYPAL\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/webhooks/mock/payment-cancelled",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"webhooks",
+								"mock",
+								"payment-cancelled"
+							]
+						},
+						"description": "Simulates user clicking 'cancel' button on payment page.\n\nWhat it does:\n- Updates PaymentTransaction status → FAILED\n- Stores webhook payload in rawPayload\n- Calls OrderPaymentService.handleUserCancelledPayment()\n- Updates Order status → CANCELLED\n- **RESTORES STOCK** to inventory"
+					},
+					"response": []
+				}
+			],
+			"description": "Mock webhook endpoints for testing payment flows.\n\nThese endpoints simulate what your colleague's actual webhook handlers will do when receiving events from PayPal or VietQR payment providers.\n\nNote: Webhooks are just regular HTTP POST endpoints that receive notifications from external services."
+		},
+		{
+			"name": "Validation Tests",
+			"item": [
+				{
+					"name": "Create Order - Missing Customer Email",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Should return 400 for missing email', function() {",
+									"    pm.response.to.have.status(400);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"customerName\": \"Test User\",\n  \"phone\": \"0901234567\",\n  \"addressLine\": \"123 Test Street\",\n  \"city\": \"Ha Noi\",\n  \"province\": \"Ha Noi\",\n  \"postalCode\": \"100000\",\n  \"items\": [\n    {\n      \"productId\": {{product_id_1}},\n      \"quantity\": 1,\n      \"price\": 450000\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/orders",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Order - Empty Items",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Should return 400 for empty items', function() {",
+									"    pm.response.to.have.status(400);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"customerEmail\": \"customer@example.com\",\n  \"customerName\": \"Test User\",\n  \"phone\": \"0901234567\",\n  \"addressLine\": \"123 Test Street\",\n  \"city\": \"Ha Noi\",\n  \"province\": \"Ha Noi\",\n  \"postalCode\": \"100000\",\n  \"items\": []\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/orders",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Order - Invalid Quantity (Zero)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Should return 400 for invalid quantity', function() {",
+									"    pm.response.to.have.status(400);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"customerEmail\": \"customer@example.com\",\n  \"customerName\": \"Test User\",\n  \"phone\": \"0901234567\",\n  \"addressLine\": \"123 Test Street\",\n  \"city\": \"Ha Noi\",\n  \"province\": \"Ha Noi\",\n  \"postalCode\": \"100000\",\n  \"items\": [\n    {\n      \"productId\": {{product_id_1}},\n      \"quantity\": 0,\n      \"price\": 450000\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/orders",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cancel Order - Already Cancelled (Should Fail)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Should return 400 for already cancelled order', function() {",
+									"    pm.response.to.have.status(400);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/orders/{{order_id}}/cancel",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"orders",
+								"{{order_id}}",
+								"cancel"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Complete Order Flow",
+			"item": [
+				{
+					"name": "Step 1 - Create Order",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    pm.collectionVariables.set('order_id', jsonData.data.id);",
+									"    pm.collectionVariables.set('payment_transaction_id', jsonData.data.paymentTransactionId);",
+									"    ",
+									"    pm.test('Order created with PENDING_PROCESSING status', function() {",
+									"        pm.expect(jsonData.data.status).to.eql('PENDING_PROCESSING');",
+									"    });",
+									"    ",
+									"    pm.test('Payment transaction created with INIT status', function() {",
+									"        pm.expect(jsonData.data.paymentStatus).to.eql('INIT');",
+									"    });",
+									"    ",
+									"    pm.test('Payment transaction ID exists', function() {",
+									"        pm.expect(jsonData.data.paymentTransactionId).to.exist;",
+									"    });",
+									"    ",
+									"    console.log('✅ Step 1: Order created successfully');",
+									"    console.log('Order ID: ' + jsonData.data.id);",
+									"    console.log('Payment Transaction ID: ' + jsonData.data.paymentTransactionId);",
+									"    console.log('Total with VAT: ' + jsonData.data.totalWithVat);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"customerEmail\": \"test.flow@example.com\",\n  \"customerName\": \"Complete Flow Test\",\n  \"phone\": \"0901234567\",\n  \"addressLine\": \"123 Test Street\",\n  \"city\": \"Ha Noi\",\n  \"province\": \"Ha Noi\",\n  \"postalCode\": \"100000\",\n  \"cartSessionKey\": \"test-flow-cart-session\",\n  \"items\": [\n    {\n      \"productId\": {{product_id_1}},\n      \"quantity\": 2,\n      \"price\": 450000\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/orders",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Step 2 - Verify Order Status",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    ",
+									"    pm.test('Order is in PENDING_PROCESSING state', function() {",
+									"        pm.expect(jsonData.data.status).to.eql('PENDING_PROCESSING');",
+									"    });",
+									"    ",
+									"    console.log('✅ Step 2: Order status verified');",
+									"    console.log('Waiting for payment...');",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/orders/{{order_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"orders",
+								"{{order_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Step 3 - Payment Captured (Webhook)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    console.log('✅ Step 3: Payment captured webhook processed');",
+									"    console.log('Order should now be PAID');",
+									"    console.log('Cart should be cleared automatically');",
+									"    ",
+									"    pm.test('Webhook processed successfully', function() {",
+									"        var jsonData = pm.response.json();",
+									"        pm.expect(jsonData.success).to.be.true;",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"orderId\": {{order_id}},\n  \"provider\": \"PAYPAL\",\n  \"providerReference\": \"PAYPAL_12345\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/webhooks/mock/payment-captured",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"webhooks",
+								"mock",
+								"payment-captured"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Step 4 - Verify Order is PAID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    ",
+									"    pm.test('Order transitioned to PAID status', function() {",
+									"        pm.expect(jsonData.data.status).to.eql('PAID');",
+									"    });",
+									"    ",
+									"    pm.test('Payment status is CAPTURED', function() {",
+									"        pm.expect(jsonData.data.paymentStatus).to.eql('CAPTURED');",
+									"    });",
+									"    ",
+									"    console.log('✅ Step 4: Order successfully paid');",
+									"    console.log('Complete flow finished successfully! 🎉');",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/orders/{{order_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"orders",
+								"{{order_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Shipping Fee Calculation Tests",
+			"item": [
+				{
+					"name": "Order - Ha Noi (Big City)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    console.log('Shipping Fee (Ha Noi): ' + jsonData.data.shippingFee);",
+									"    console.log('Total Before VAT: ' + jsonData.data.totalBeforeVat);",
+									"    console.log('Total With VAT: ' + jsonData.data.totalWithVat);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"customerEmail\": \"customer@example.com\",\n  \"customerName\": \"Ha Noi Customer\",\n  \"phone\": \"0901234567\",\n  \"addressLine\": \"123 Nguyen Trai\",\n  \"city\": \"Ha Noi\",\n  \"province\": \"Ha Noi\",\n  \"postalCode\": \"100000\",\n  \"items\": [\n    {\n      \"productId\": {{product_id_1}},\n      \"quantity\": 1,\n      \"price\": 450000\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/orders",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Order - Ho Chi Minh (Big City)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    console.log('Shipping Fee (HCM): ' + jsonData.data.shippingFee);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"customerEmail\": \"customer@example.com\",\n  \"customerName\": \"HCM Customer\",\n  \"phone\": \"0901234567\",\n  \"addressLine\": \"456 Le Loi\",\n  \"city\": \"Ho Chi Minh\",\n  \"province\": \"Ho Chi Minh\",\n  \"postalCode\": \"700000\",\n  \"items\": [\n    {\n      \"productId\": {{product_id_1}},\n      \"quantity\": 1,\n      \"price\": 450000\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/orders",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Order - Other Province (Small City)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    console.log('Shipping Fee (Other): ' + jsonData.data.shippingFee);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"customerEmail\": \"customer@example.com\",\n  \"customerName\": \"Da Nang Customer\",\n  \"phone\": \"0901234567\",\n  \"addressLine\": \"789 Bach Dang\",\n  \"city\": \"Da Nang\",\n  \"province\": \"Da Nang\",\n  \"postalCode\": \"550000\",\n  \"items\": [\n    {\n      \"productId\": {{product_id_1}},\n      \"quantity\": 1,\n      \"price\": 450000\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/orders",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"orders"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

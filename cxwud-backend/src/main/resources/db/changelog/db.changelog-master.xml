@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd"
+>
+    <include file="db/changelog/init-changelog.xml" />
+    <include file="db/changelog/update-order-table-changelog.xml" />
+    <include file="db/changelog/migrate-product-changelog.xml" />
+    <include file="db/changelog/seed-product-data-changelog.xml" />
+    <include file="db/changelog/auth-changelog.xml" />
+    <include file="db/changelog/drop-pbac.xml" />
+    <include file="db/changelog/db.changelog-master.yaml" />
+    <include file="db/changelog/add-image-changelog.xml" />
+    <include file="db/changelog/add-payment-attribute-changelog.xml" />
+    <include file="db/changelog/seed-image-product-data.xml" />
+    <include file="db/changelog/add-session-key.xml" />
+    <include file="db/changelog/cart-checkout-dedup.xml" />
+    <include file="db/changelog/expires-at-col.xml" />
+    <include file="db/changelog/move-deliveryinfo.xml" />
+    <include file="db/changelog/add-notification-outbox.xml" />
+    <include file="db/changelog/update-changelog.xml" />
+    <include file="db/changelog/add-des.xml"/>
+    <include file="db/changelog/2026/01/21-01-changelog.xml"/>
+</databaseChangeLog>

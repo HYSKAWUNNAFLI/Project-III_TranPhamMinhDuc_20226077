@@ -1,0 +1,875 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap');
+
+:root {
+  --book-width: 500px;
+  --book-height: 700px;
+  --book-half-width: calc(var(--book-width) * 0.5);
+  --book-half-height: calc(var(--book-height) * 0.5);
+  --leather-color: #5d2922;
+  --paper-color: #f3e9d2;
+  --gold-color: #d4af37;
+  --ink-color: #3e2b26;
+  --note-color: #f5ebc7;
+  --note-edge: #d7c493;
+  --note-ink: #5b4026;
+  --pen-color: #2f3c36;
+  --pencil-color: #d9b36c;
+  --pencil-wood: #f2d3a1;
+  --pencil-lead: #2b2b2b;
+}
+
+.vintage-book-section {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  /* Sử dụng Flexbox để căn giữa nội dung bên trong */
+  display: flex;
+  align-items: center;
+  /* Căn giữa theo chiều dọc */
+  justify-content: center;
+  /* Căn giữa theo chiều ngang */
+  overflow: hidden;
+  background: #1a1008;
+  font-family: 'Cormorant Garamond', serif;
+  padding: 0;
+  /* Đảm bảo không có padding gây lệch */
+}
+
+/* Nền bàn gỗ */
+.wood-table-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at center, rgba(255, 255, 255, 0.05), rgba(0, 0, 0, 0.6)),
+    url("https://www.transparenttextures.com/patterns/wood-pattern.png"),
+    #2a1b12;
+  z-index: 0;
+}
+
+/* === SCENE 3D (Cũng căn giữa để chắc chắn) === */
+.book-scene {
+  perspective: 2500px;
+  z-index: 10;
+  /* Đảm bảo scene chiếm không gian để căn giữa */
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  /* Căn giữa sách theo chiều dọc trong scene */
+  justify-content: center;
+  /* Căn giữa sách theo chiều ngang trong scene */
+  position: relative;
+  isolation: isolate;
+}
+
+/* Quyển sách */
+.grand-grim-book {
+  position: relative;
+  width: var(--book-width);
+  height: var(--book-height);
+  transform-style: preserve-3d;
+  transition: transform 1s cubic-bezier(0.645, 0.045, 0.355, 1);
+  cursor: pointer;
+  z-index: 6;
+  /* Không cần margin auto vì parent đã dùng flex justify-center */
+}
+
+.grand-grim-book {
+  position: relative;
+  width: var(--book-width);
+  height: var(--book-height);
+  transform-style: preserve-3d;
+  transition: transform 1s cubic-bezier(0.645, 0.045, 0.355, 1);
+  cursor: pointer;
+}
+
+/* Khi mở: Dời cả cuốn sách sang phải một chút để nó nằm giữa màn hình */
+.grand-grim-book.is-open {
+  transform: translateX(calc(var(--book-width) / 2));
+  cursor: default;
+}
+
+.desk-items {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.desk-items button {
+  pointer-events: auto;
+}
+
+.desk-note {
+  position: absolute;
+  width: 180px;
+  min-height: 130px;
+  padding: 16px 18px 14px;
+  background: var(--note-color);
+  border: 1px solid var(--note-edge);
+  border-radius: 14px 14px 12px 12px;
+  box-shadow: 0 14px 26px rgba(0, 0, 0, 0.22);
+  color: var(--note-ink);
+  text-align: left;
+  font-family: 'Cormorant Garamond', serif;
+  cursor: pointer;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+  animation: deskReveal 0.7s ease both;
+}
+
+.desk-note:focus-visible {
+  outline: 2px solid rgba(143, 59, 45, 0.5);
+  outline-offset: 4px;
+}
+
+.desk-note .note-pin {
+  position: absolute;
+  top: -10px;
+  left: 18px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #c55f46;
+  box-shadow: inset 0 2px 2px rgba(255, 255, 255, 0.4), 0 4px 8px rgba(0, 0, 0, 0.25);
+}
+
+.desk-note .note-pin::after {
+  content: '';
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.desk-note .note-title {
+  display: block;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.desk-note .note-body {
+  display: block;
+  margin-top: 10px;
+  font-size: 15px;
+  line-height: 1.4;
+  max-height: 0;
+  opacity: 0;
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+  overflow: hidden;
+}
+
+.desk-note .note-meta {
+  display: block;
+  margin-top: 12px;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  opacity: 0.6;
+}
+
+.desk-note.is-open .note-body {
+  max-height: 80px;
+  opacity: 1;
+}
+
+.desk-note.is-open {
+  background: #fff3d5;
+  box-shadow: 0 18px 30px rgba(0, 0, 0, 0.28);
+}
+
+.note-1 {
+  top: calc(50% - var(--book-half-height) + 40px);
+  left: calc(50% - var(--book-half-width) - 200px);
+  transform: rotate(-4deg);
+}
+
+.note-1:hover {
+  transform: translateY(-6px) rotate(-2deg);
+}
+
+.note-1.is-open {
+  transform: translateY(-10px) rotate(-1deg);
+}
+
+.note-2 {
+  top: calc(50% - var(--book-half-height) + 170px);
+  left: calc(50% + var(--book-half-width) + 40px);
+  transform: rotate(4deg);
+  animation-delay: 0.15s;
+}
+
+.note-2:hover {
+  transform: translateY(-6px) rotate(2deg);
+}
+
+.note-2.is-open {
+  transform: translateY(-10px) rotate(1deg);
+}
+
+.desk-pen {
+  position: absolute;
+  width: 200px;
+  height: 18px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  transition: transform 0.25s ease, filter 0.25s ease;
+  animation: deskReveal 0.7s ease both;
+  animation-delay: 0.3s;
+}
+
+.desk-pen:focus-visible {
+  outline: 2px solid rgba(143, 59, 45, 0.5);
+  outline-offset: 6px;
+}
+
+.pen-1 {
+  top: calc(50% + var(--book-half-height) - 90px);
+  left: calc(50% - var(--book-half-width) - 230px);
+  transform: rotate(-12deg);
+}
+
+.desk-pen .pen-cap {
+  width: 26px;
+  height: 18px;
+  background: #1e2825;
+  border-radius: 8px 4px 4px 8px;
+}
+
+.desk-pen .pen-body {
+  flex: 1;
+  height: 12px;
+  margin: 0 2px;
+  background: linear-gradient(90deg, var(--pen-color), #1c2522);
+  border-radius: 8px;
+  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.2);
+}
+
+.desk-pen .pen-tip {
+  width: 18px;
+  height: 10px;
+  background: #c7a35c;
+  clip-path: polygon(0 50%, 100% 0, 100% 100%);
+}
+
+.desk-pen.is-active {
+  transform: translateY(-8px) rotate(-6deg);
+  filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.25));
+}
+
+.desk-pencil {
+  position: absolute;
+  width: 170px;
+  height: 14px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  transition: transform 0.25s ease, filter 0.25s ease;
+  animation: deskReveal 0.7s ease both;
+  animation-delay: 0.45s;
+}
+
+.desk-pencil:focus-visible {
+  outline: 2px solid rgba(143, 59, 45, 0.5);
+  outline-offset: 6px;
+}
+
+.pencil-1 {
+  top: calc(50% + var(--book-half-height) - 140px);
+  left: calc(50% + var(--book-half-width) + 60px);
+  transform: rotate(8deg);
+}
+
+.desk-pencil .pencil-body {
+  flex: 1;
+  height: 10px;
+  background: linear-gradient(90deg, var(--pencil-color), var(--pencil-wood));
+  border-radius: 6px;
+  position: relative;
+  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.4);
+}
+
+.desk-pencil .pencil-tip {
+  width: 16px;
+  height: 14px;
+  background: var(--pencil-wood);
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
+  position: relative;
+}
+
+.desk-pencil .pencil-tip::after {
+  content: '';
+  position: absolute;
+  right: 2px;
+  top: 4px;
+  width: 5px;
+  height: 6px;
+  background: var(--pencil-lead);
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
+}
+
+.desk-pencil:hover {
+  transform: translateY(-6px) rotate(10deg);
+  filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.25));
+}
+
+/* === BÌA TRƯỚC (NHÓM LẬT) === */
+.book-cover-group {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transform-origin: left center;
+  /* Điểm xoay là gáy sách (bên trái) */
+  transform-style: preserve-3d;
+  transition: transform 1s cubic-bezier(0.645, 0.045, 0.355, 1);
+  z-index: 10;
+}
+
+.grand-grim-book.is-open .book-cover-group {
+  transform: rotateY(-180deg);
+  /* Lật 180 độ */
+}
+
+.cover-face {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  /* Ẩn mặt sau */
+  border-radius: 4px 12px 12px 4px;
+}
+
+/* 1. Mặt tiền bìa da */
+.front-leather {
+  background-color: var(--leather-color);
+  box-shadow:
+    inset 10px 0 20px rgba(0, 0, 0, 0.5),
+    /* Bóng gáy */
+    5px 5px 15px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--gold-color);
+  z-index: 2;
+}
+
+/* Texture da giả */
+.leather-texture {
+  position: absolute;
+  inset: 0;
+  opacity: 0.5;
+  background-image: url("https://www.transparenttextures.com/patterns/black-scales.png");
+  mix-blend-mode: multiply;
+  align-items: center;
+  justify-content: center;
+}
+
+.gold-border {
+  border: 3px double var(--gold-color);
+  padding: 40px;
+  text-align: center;
+  position: relative;
+  z-index: 2;
+  width: 70%;
+  height: 80%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.cover-title {
+  font-family: 'Cinzel', serif;
+  font-size: 64px;
+  line-height: 1;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  letter-spacing: 5px;
+  margin: 20px 0;
+}
+
+.cover-ornament {
+  font-size: 40px;
+}
+
+.cover-est,
+.cover-subtitle {
+  font-size: 14px;
+  letter-spacing: 3px;
+}
+
+.click-hint {
+  position: absolute;
+  bottom: 20px;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 12px;
+  font-style: italic;
+  animation: pulse 2s infinite;
+}
+
+/* 2. Mặt sau bìa da (Trang Trái nội dung) */
+.back-paper {
+  background: var(--paper-color);
+  transform: rotateY(180deg);
+  /* Xoay sẵn để khi bìa lật 180 thì nó về 0 */
+  box-shadow: inset -10px 0 20px rgba(0, 0, 0, 0.1);
+  /* Bóng gáy ngược */
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* === THÂN SAU (TRANG PHẢI) === */
+.book-back-group {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--paper-color);
+  border-radius: 0 12px 12px 0;
+  z-index: 5;
+  box-shadow:
+    10px 20px 40px rgba(0, 0, 0, 0.4);
+  /* Bóng đổ xuống bàn */
+}
+
+/* Độ dày tập giấy (Tạo khối 3D) */
+.book-thickness-side {
+  position: absolute;
+  right: 0;
+  top: 4px;
+  bottom: 4px;
+  width: 15px;
+  /* Độ dày sách */
+  background: linear-gradient(to right, #e3d5b8, #dcc8a0 20%, #e3d5b8 40%);
+  transform: rotateY(90deg);
+  transform-origin: right center;
+  border-left: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.book-thickness-bottom {
+  position: absolute;
+  bottom: 0;
+  left: 4px;
+  right: 0;
+  height: 15px;
+  background: linear-gradient(to bottom, #e3d5b8, #dcc8a0);
+  transform: rotateX(-90deg);
+  transform-origin: bottom center;
+}
+
+/* === NỘI DUNG TRONG SÁCH (CHUNG) === */
+.page-content-left,
+.page-content-right {
+  padding: 60px 40px;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  position: relative;
+  /* Texture giấy */
+  background-image: url("https://www.transparenttextures.com/patterns/cream-paper.png");
+}
+
+/* Trang Trái: Hero Content */
+.page-content-left {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-right: 1px solid rgba(0, 0, 0, 0.05);
+  /* Viền gáy */
+}
+
+.vintage-eyebrow {
+  color: #8b4513;
+  font-weight: bold;
+  letter-spacing: 2px;
+  margin-bottom: 15px;
+}
+
+.vintage-headline {
+  font-family: 'Cinzel', serif;
+  font-size: 42px;
+  color: var(--ink-color);
+  margin: 0;
+  line-height: 1.2;
+}
+
+.headline-separator {
+  color: #b8860b;
+  font-size: 20px;
+  margin: 20px 0;
+}
+
+.vintage-description {
+  font-size: 18px;
+  line-height: 1.6;
+  color: #554;
+  margin-bottom: 18px;
+  font-style: italic;
+  width: 100%;
+  max-width: 360px;
+}
+
+.chapter-kicker {
+  font-size: 13px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #7c5a3b;
+  margin-bottom: 6px;
+}
+
+.reading-body {
+  margin-top: 12px;
+  text-align: left;
+  width: 100%;
+  max-width: 360px;
+  color: #4b3a2b;
+}
+
+.reading-paragraph {
+  margin: 0 0 12px;
+  font-size: 17px;
+  line-height: 1.7;
+}
+
+.reading-paragraph.is-dropcap::first-letter {
+  float: left;
+  font-family: 'Cinzel', serif;
+  font-size: 42px;
+  line-height: 0.9;
+  padding-right: 8px;
+  color: #8f3b2d;
+}
+
+.vintage-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.stamp-btn {
+  display: inline-block;
+  padding: 10px 25px;
+  margin: 0 10px;
+  font-family: 'Cinzel', serif;
+  text-decoration: none;
+  font-weight: bold;
+  text-transform: uppercase;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.primary-stamp {
+  border: 2px solid #8f3b2d;
+  color: #8f3b2d;
+  box-shadow: 3px 3px 0 rgba(143, 59, 45, 0.2);
+}
+
+.primary-stamp:hover {
+  background: #8f3b2d;
+  color: #fff;
+}
+
+.secondary-stamp {
+  border: 1px solid #554;
+  color: #554;
+}
+
+/* Trang Phải: Sketch Layout */
+.page-content-right {
+  display: flex;
+  /* Flex để chia cột dọc và nội dung */
+}
+
+.sketch-layout {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  gap: 20px;
+}
+
+/* Cột dọc bên phải (Vertical Text) */
+.vertical-col {
+  width: 40px;
+  border-right: 2px double rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.vertical-text {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  font-family: 'Cinzel', serif;
+  font-size: 24px;
+  color: #b8860b;
+  letter-spacing: 3px;
+  white-space: nowrap;
+}
+
+/* Cột nội dung chính (Main boxes) */
+.main-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  padding-top: 20px;
+}
+
+.page-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.page-controls .top-tags-row {
+  flex: 1;
+  flex-wrap: wrap;
+}
+
+.book-close {
+  border: 1px solid #8f3b2d;
+  background: rgba(255, 255, 255, 0.6);
+  color: #8f3b2d;
+  font-family: 'Cinzel', serif;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 6px 16px;
+  border-radius: 18px;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+.book-close:hover {
+  background: #8f3b2d;
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.top-tags-row {
+  display: flex;
+  gap: 15px;
+  justify-content: flex-start;
+}
+
+.sketch-tag {
+  border: 1px solid #554;
+  padding: 5px 15px;
+  text-decoration: none;
+  color: #3e2b26;
+  font-family: monospace;
+  /* Giả chữ đánh máy */
+  font-size: 14px;
+  transform: rotate(-2deg);
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.big-blocks-area {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  flex: 1;
+}
+
+.sketch-box {
+  border: 1px dashed #8b4513;
+  /* Nét vẽ đứt */
+  padding: 15px;
+  position: relative;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Metrics Box */
+.metrics-box {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+  text-align: center;
+}
+
+.metric-mini b {
+  font-size: 24px;
+  color: #8f3b2d;
+  display: block;
+  font-family: 'Cinzel';
+}
+
+.metric-mini small {
+  font-size: 12px;
+  color: #554;
+  font-style: italic;
+}
+
+/* Badges Box */
+.badges-box {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.badge-line {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  padding-bottom: 4px;
+  font-style: italic;
+  color: #3e2b26;
+}
+
+/* Decor góc */
+.corner-decor {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  border: 1px solid #b8860b;
+}
+
+.bottom-left {
+  bottom: 20px;
+  left: 20px;
+  border-top: none;
+  border-right: none;
+}
+
+.top-right {
+  top: 20px;
+  right: 20px;
+  border-bottom: none;
+  border-left: none;
+}
+
+/* Scroll Hint */
+.vintage-hint {
+  position: absolute;
+  bottom: 20px;
+  color: rgba(255, 255, 255, 0.4);
+  z-index: 20;
+}
+
+@keyframes pulse {
+
+  0%,
+  100% {
+    opacity: 0.4;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes deskReveal {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Responsive Mobile */
+@media (max-width: 768px) {
+  :root {
+    --book-width: 300px;
+    --book-height: 450px;
+  }
+
+  .cover-title {
+    font-size: 42px;
+  }
+
+  .vintage-headline {
+    font-size: 28px;
+  }
+
+  .vintage-description {
+    font-size: 14px;
+    margin-bottom: 20px;
+  }
+
+  .page-content-left,
+  .page-content-right {
+    padding: 30px 20px;
+  }
+
+  .stamp-btn {
+    padding: 8px 15px;
+    font-size: 12px;
+  }
+
+  .vertical-text {
+    font-size: 18px;
+  }
+
+  .metric-mini b {
+    font-size: 18px;
+  }
+
+  .desk-note {
+    width: 130px;
+    min-height: 100px;
+    padding: 12px;
+  }
+
+  .desk-note .note-body {
+    font-size: 13px;
+  }
+
+  .desk-pen {
+    width: 160px;
+  }
+
+  .desk-pencil {
+    width: 140px;
+  }
+
+  .note-1 {
+    top: 10%;
+    left: 6%;
+    transform: rotate(-2deg);
+  }
+
+  .note-2 {
+    top: 16%;
+    left: auto;
+    right: 6%;
+    transform: rotate(2deg);
+  }
+
+  .pen-1 {
+    top: auto;
+    bottom: 12%;
+    left: 10%;
+    transform: rotate(-8deg);
+  }
+
+  .pencil-1 {
+    top: auto;
+    bottom: 14%;
+    left: auto;
+    right: 10%;
+    transform: rotate(6deg);
+  }
+
+  /* Trên mobile, khi mở sách sẽ zoom out hoặc fit màn hình */
+  .grand-grim-book.is-open {
+    transform: translateX(0) scale(0.9);
+  }
+}

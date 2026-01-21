@@ -1,0 +1,536 @@
+/* =========================================
+   NEWSPAPER SECTION - OPTIMIZED & FIXED
+   Prefix: np-
+   ========================================= */
+
+/* --- 1. Main Container --- */
+.theme--newspaper {
+  background: #e8e6e1;
+  color: #1a1a1a;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  /* Giảm lag: Không dùng perspective quá lớn ở container cha nếu không cần thiết */
+  /* perspective: 2000px; -> Xóa dòng này để giảm tải render */
+}
+
+/* Tối ưu background để giảm lag khi scroll */
+.theme--newspaper::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  /* Dùng opacity thấp thay vì backdrop-filter */
+  background-image: repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(0, 0, 0, 0.03) 40px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.np-bg-word {
+  position: absolute;
+  font-size: 25vw;
+  font-weight: 900;
+  color: rgba(0, 0, 0, 0.04);
+  pointer-events: none;
+  z-index: 0;
+  font-family: 'Playfair Display', serif;
+  will-change: transform;
+  /* Tối ưu scroll */
+}
+
+.np-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 1000px;
+  position: relative;
+  z-index: 2;
+  gap: 30px;
+}
+
+.theme--newspaper.is-reading .np-stage {
+  z-index: 10000;
+}
+
+/* --- 2. Header --- */
+.np-header {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.np-eyebrow {
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: #666;
+  font-weight: 700;
+}
+
+.np-headline {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(40px, 6vw, 72px);
+  line-height: 1;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.np-subhead {
+  font-size: 15px;
+  color: #555;
+  max-width: 400px;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* --- 3. Fan Wrapper --- */
+.np-fan-wrapper {
+  position: relative;
+  width: 300px;
+  height: 420px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+  /* Chỉ dùng preserve-3d ở đây */
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+
+.np-fan-wrapper.is-reading {
+  z-index: 10001;
+}
+
+/* --- 4. Newspaper Card (Trạng thái đóng) --- */
+.np-card {
+  position: absolute;
+  width: 260px;
+  height: 360px;
+  background: #fdfbf7;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  /* Tối ưu shadow: Giảm bán kính blur để đỡ lag */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 2px;
+  padding: 20px;
+  transform-origin: 50% 120%;
+  /* Tâm xoay ở dưới đáy */
+
+  /* Animation mượt mà */
+  transition: transform 0.6s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.3s ease;
+
+  /* Xếp chồng mặc định */
+  transform: rotate(calc(var(--i) * 2deg - 5deg)) translateY(0);
+  z-index: calc(10 - var(--i));
+  cursor: pointer;
+  overflow: hidden;
+  will-change: transform;
+  /* Tối ưu hiệu năng */
+}
+
+/* Trạng thái Xòe Quạt (Fanned) */
+.np-fan-wrapper.is-fanned .np-card {
+  transform:
+    rotate(calc((var(--i) - 2.5) * 10deg)) translateX(calc((var(--i) - 2.5) * 50px))
+    /* Giảm khoảng cách X một chút để đỡ tràn */
+    translateY(calc(abs(var(--i) - 2.5) * 15px));
+
+  box-shadow: -5px 5px 15px rgba(0, 0, 0, 0.15);
+  transition-delay: calc(var(--i) * 0.08s);
+  /* Delay nhanh hơn chút cho mượt */
+}
+
+/* --- FIX LỖI GIẬT KHI HOVER --- */
+/* Chỉ hover khi đã xòe VÀ chưa mở rộng */
+.np-fan-wrapper.is-fanned .np-card:not(.is-expanded):not(.is-hidden):hover {
+  /* Ghi đè transform cẩn thận: Giữ nguyên góc xoay nhẹ hoặc reset về 0 nhưng thêm scale */
+  /* Cách tốt nhất để không giật: Dịch lên trên theo trục Y của chính nó */
+  transform:
+    rotate(calc((var(--i) - 2.5) * 10deg)) translateX(calc((var(--i) - 2.5) * 50px)) translateY(calc(abs(var(--i) - 2.5) * 15px - 30px))
+    /* Trừ thêm 30px để đi lên */
+    scale(1.05);
+
+  z-index: 100;
+  /* Nổi lên trên cùng */
+  transition-duration: 0.3s;
+  /* Tốc độ hover nhanh */
+  transition-delay: 0s;
+  /* Không delay khi hover */
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+  border-color: #1e7fbf;
+  background: #fff;
+}
+
+/* --- 5. Trạng thái Expanded (Đọc báo) - FIX LỖI KHÔNG ZOOM & MỜ --- */
+.np-card.is-expanded {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  /* Sử dụng viewport unit để vừa khít màn hình */
+  width: 90vw;
+  max-width: 1000px;
+  height: 85vh;
+  max-height: 700px;
+
+  z-index: 10000;
+  cursor: default;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+  background: #fff;
+  border-radius: 4px;
+  padding: 0;
+
+  /* Reset transform để căn giữa */
+  transform: translate(-50%, -50%) !important;
+
+  /* Animation mở ra: Sử dụng keyframes zoom */
+  animation: paperZoomIn 0.5s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+
+  /* Fix lỗi mờ text: Reset transform-style */
+  transform-style: flat;
+
+  display: flex;
+  flex-direction: row;
+}
+
+/* Keyframes tạo hiệu ứng phóng to */
+@keyframes paperZoomIn {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.4);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+/* Các tờ báo khác ẩn đi */
+.np-card.is-hidden {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+/* --- 6. Nội dung bên trong --- */
+
+/* Cover (Bìa) */
+.np-cover {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: opacity 0.2s ease;
+}
+
+.np-card.is-expanded .np-cover {
+  display: none;
+  /* Ẩn bìa ngay lập tức để hiện nội dung */
+}
+
+/* Inner Pages (Nội dung chính) */
+.np-inner {
+  display: none;
+  /* Mặc định ẩn */
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  /* Bắt đầu mờ */
+  animation: contentFadeIn 0.6s ease forwards 0.3s;
+  /* Hiện dần sau khi zoom xong */
+}
+
+@keyframes contentFadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+.np-card.is-expanded .np-inner {
+  display: flex;
+  /* Hiện layout flex */
+}
+
+/* Layout 2 trang */
+.np-page {
+  flex: 1;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  overflow-y: auto;
+  /* Cho phép cuộn nội dung nếu dài */
+  /* Fix text rendering */
+  -webkit-font-smoothing: antialiased;
+}
+
+.np-page.left {
+  border-right: 1px solid #e0e0e0;
+  background: #fffdf7;
+}
+
+.np-page.right {
+  background: #fffdf7;
+}
+
+/* Text Styles - Fix lỗi mờ */
+.np-inner h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 32px;
+  margin: 0;
+  color: #111;
+  font-weight: 700;
+}
+
+.np-inner h3 {
+  font-family: sans-serif;
+  font-size: 13px;
+  text-transform: uppercase;
+  color: #1e7fbf;
+  border-bottom: 2px solid #1e7fbf;
+  padding-bottom: 8px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.np-inner p {
+  font-size: 16px;
+  line-height: 1.7;
+  color: #222;
+  font-family: 'Times New Roman', serif;
+  text-align: justify;
+  margin: 0;
+}
+
+.np-inner-img {
+  width: 100%;
+  height: 220px;
+  background-color: #ddd;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  margin: 10px 0;
+  border: 1px solid #e1e1e1;
+  border-radius: 6px;
+}
+
+.np-cols {
+  column-count: 2;
+  column-gap: 30px;
+}
+
+.np-article-mini {
+  border-bottom: 1px solid #eee;
+  padding-bottom: 15px;
+}
+
+.np-article-mini h4 {
+  margin: 0 0 8px;
+  font-size: 18px;
+  font-family: 'Playfair Display', serif;
+}
+
+/* --- 7. UI Controls --- */
+.np-close-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  z-index: 100;
+  background: white;
+  border: 1px solid #333;
+  border-radius: 20px;
+  padding: 8px 16px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.np-close-btn:hover {
+  background: #333;
+  color: #fff;
+}
+
+.np-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  /* Bỏ backdrop-filter để giảm lag scroll nếu máy yếu, hoặc giữ lại nếu máy khỏe */
+  /* backdrop-filter: blur(5px); */
+  z-index: 9000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+}
+
+.np-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.fade-out {
+  opacity: 0;
+  transform: translateY(-20px);
+  pointer-events: none;
+}
+
+/* Bìa giả lập */
+.np-paper-head {
+  border-bottom: 2px solid #222;
+  padding-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.np-paper-name {
+  font-family: 'Playfair Display', serif;
+  font-weight: 900;
+  font-size: 22px;
+  letter-spacing: -1px;
+  line-height: 1;
+}
+
+.np-paper-date {
+  font-size: 9px;
+  font-weight: 700;
+  color: #555;
+}
+
+.np-hero-img {
+  width: 100%;
+  height: 130px;
+  background-color: #dcdcd9;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  margin-bottom: 10px;
+  border: 1px solid #d6d6d6;
+  border-radius: 4px;
+}
+
+.np-headline-text {
+  font-family: 'Playfair Display', serif;
+  font-weight: 800;
+  font-size: 18px;
+  line-height: 1.1;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+
+.np-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.np-line {
+  height: 4px;
+  background: #cecece;
+  border-radius: 2px;
+}
+
+.np-actions {
+  margin-top: 10px;
+  transition: opacity 0.3s;
+}
+
+.np-btn-read {
+  text-decoration: none;
+  color: #1a1a1a;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  padding-bottom: 4px;
+  border-bottom: 2px solid #1e7fbf;
+  transition: all 0.3s;
+}
+
+.np-btn-read:hover {
+  background: #1e7fbf;
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 4px;
+  border-bottom-color: transparent;
+}
+
+.np-scroll-hint {
+  position: absolute;
+  bottom: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: #888;
+}
+
+.np-line-ind {
+  width: 1px;
+  height: 30px;
+  background: #aaa;
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 1024px) {
+  .np-card.is-expanded {
+    width: 95vw;
+    height: 90vh;
+  }
+}
+
+@media (max-width: 768px) {
+  .np-fan-wrapper {
+    width: 100%;
+    height: 320px;
+    transform: scale(0.9);
+  }
+
+  /* Giảm góc xoay trên mobile để đỡ tràn */
+  .np-fan-wrapper.is-fanned .np-card {
+    transform: rotate(calc((var(--i) - 2.5) * 6deg)) translateX(calc((var(--i) - 2.5) * 20px)) translateY(calc(abs(var(--i) - 2.5) * 5px));
+  }
+
+  .np-fan-wrapper.is-fanned .np-card:hover {
+    transform: none;
+  }
+
+  /* Tắt hover trên mobile */
+
+  .np-card.is-expanded {
+    flex-direction: column;
+    /* Đọc dọc trên mobile */
+    height: 90vh;
+    border-radius: 8px;
+  }
+
+  .np-page {
+    padding: 20px;
+    overflow: visible;
+  }
+
+  .np-page.left {
+    border-right: none;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .np-cols {
+    column-count: 1;
+  }
+
+  .np-inner-img {
+    height: 180px;
+  }
+}

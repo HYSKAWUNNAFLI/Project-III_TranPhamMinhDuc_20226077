@@ -1,0 +1,880 @@
+{
+	"info": {
+		"name": "AIMS - Cart Management APIs",
+		"description": "API collection for shopping cart operations including add, update, remove items and checkout scenarios",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"auth": {
+		"type": "noauth"
+	},
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8080",
+			"type": "string"
+		},
+		{
+			"key": "cart_session_key",
+			"value": "test-cart-session-{{$randomUUID}}",
+			"type": "string"
+		},
+		{
+			"key": "product_id_1",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "product_id_2",
+			"value": "2",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "Cart Operations",
+			"item": [
+				{
+					"name": "Get Empty Cart",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    console.log('Cart Session Key: ' + jsonData.data.sessionKey);",
+									"    console.log('Total Items: ' + jsonData.data.items.length);",
+									"    ",
+									"    pm.test('Cart is empty', function() {",
+									"        pm.expect(jsonData.data.items).to.have.lengthOf(0);",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/cart?sessionKey={{cart_session_key}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"cart"
+							],
+							"query": [
+								{
+									"key": "sessionKey",
+									"value": "{{cart_session_key}}"
+								}
+							]
+						},
+						"description": "Retrieve cart by session key. If cart doesn't exist, a new empty cart is created."
+					},
+					"response": []
+				},
+				{
+					"name": "Add Item to Cart",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    console.log('✅ Item added to cart');",
+									"    console.log('Total items: ' + jsonData.data.items.length);",
+									"    console.log('Total before VAT: ' + jsonData.data.totalBeforeVat);",
+									"    console.log('Total with VAT: ' + jsonData.data.totalWithVat);",
+									"    ",
+									"    pm.test('Cart contains items', function() {",
+									"        pm.expect(jsonData.data.items.length).to.be.greaterThan(0);",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"productId\": {{product_id_1}},\n  \"quantity\": 2,\n  \"price\": 450000\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/cart/items?sessionKey={{cart_session_key}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"cart",
+								"items"
+							],
+							"query": [
+								{
+									"key": "sessionKey",
+									"value": "{{cart_session_key}}"
+								}
+							]
+						},
+						"description": "Add a product to the cart with specified quantity."
+					},
+					"response": []
+				},
+				{
+					"name": "Add Another Item",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    console.log('✅ Another item added');",
+									"    console.log('Total items: ' + jsonData.data.items.length);",
+									"    ",
+									"    pm.test('Cart has multiple items', function() {",
+									"        pm.expect(jsonData.data.items.length).to.be.greaterThan(1);",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"productId\": {{product_id_2}},\n  \"quantity\": 1,\n  \"price\": 180000\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/cart/items?sessionKey={{cart_session_key}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"cart",
+								"items"
+							],
+							"query": [
+								{
+									"key": "sessionKey",
+									"value": "{{cart_session_key}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Cart Item Quantity",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    console.log('✅ Item quantity updated');",
+									"    console.log('Updated total: ' + jsonData.data.totalWithVat);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"productId\": {{product_id_1}},\n  \"quantity\": 5\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/cart/items?sessionKey={{cart_session_key}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"cart",
+								"items"
+							],
+							"query": [
+								{
+									"key": "sessionKey",
+									"value": "{{cart_session_key}}"
+								}
+							]
+						},
+						"description": "Update the quantity of an existing cart item."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Cart with Items",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    console.log('📦 Cart Contents:');",
+									"    jsonData.data.items.forEach(item => {",
+									"        console.log(`  - ${item.productName}: ${item.quantity}x @ ${item.price} = ${item.totalPrice}`);",
+									"    });",
+									"    console.log('Total before VAT: ' + jsonData.data.totalBeforeVat);",
+									"    console.log('Total with VAT: ' + jsonData.data.totalWithVat);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/cart?sessionKey={{cart_session_key}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"cart"
+							],
+							"query": [
+								{
+									"key": "sessionKey",
+									"value": "{{cart_session_key}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove Item from Cart",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    console.log('✅ Item removed from cart');",
+									"    console.log('Remaining items: ' + jsonData.data.items.length);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/cart/items/{{product_id_2}}?sessionKey={{cart_session_key}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"cart",
+								"items",
+								"{{product_id_2}}"
+							],
+							"query": [
+								{
+									"key": "sessionKey",
+									"value": "{{cart_session_key}}"
+								}
+							]
+						},
+						"description": "Remove a specific product from the cart."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Checkout Scenarios",
+			"item": [
+				{
+					"name": "Setup - Add Items for Checkout Test",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    console.log('✅ Cart prepared for checkout test');",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"productId\": {{product_id_1}},\n  \"quantity\": 3,\n  \"price\": 450000\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/cart/items?sessionKey={{cart_session_key}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"cart",
+								"items"
+							],
+							"query": [
+								{
+									"key": "sessionKey",
+									"value": "{{cart_session_key}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Try to Modify Checked-Out Cart (Should Fail)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// This test should be run AFTER creating an order with this cart",
+									"// and the order has been placed (isCheckedOut = true)",
+									"if (pm.response.code === 400) {",
+									"    var jsonData = pm.response.json();",
+									"    console.log('✅ Expected error: ' + jsonData.message);",
+									"    ",
+									"    pm.test('Cart locked after checkout', function() {",
+									"        pm.expect(jsonData.message).to.include('already been used for an order');",
+									"    });",
+									"} else if (pm.response.code === 200) {",
+									"    console.log('⚠️  Cart not yet checked out - create an order first');",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"productId\": {{product_id_2}},\n  \"quantity\": 1,\n  \"price\": 180000\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/cart/items?sessionKey={{cart_session_key}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"cart",
+								"items"
+							],
+							"query": [
+								{
+									"key": "sessionKey",
+									"value": "{{cart_session_key}}"
+								}
+							]
+						},
+						"description": "After an order is created with this cart, the cart should be locked (isCheckedOut = true) and any attempt to modify it should fail."
+					},
+					"response": []
+				}
+			],
+			"description": "Test scenarios for cart checkout behavior and the isCheckedOut flag."
+		},
+		{
+			"name": "Validation Tests",
+			"item": [
+				{
+					"name": "Add Item - Invalid Quantity (Zero)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Should return 400 for invalid quantity', function() {",
+									"    pm.response.to.have.status(400);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"productId\": {{product_id_1}},\n  \"quantity\": 0,\n  \"price\": 450000\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/cart/items?sessionKey={{cart_session_key}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"cart",
+								"items"
+							],
+							"query": [
+								{
+									"key": "sessionKey",
+									"value": "{{cart_session_key}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Item - Negative Quantity",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Should return 400 for negative quantity', function() {",
+									"    pm.response.to.have.status(400);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"productId\": {{product_id_1}},\n  \"quantity\": -5,\n  \"price\": 450000\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/cart/items?sessionKey={{cart_session_key}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"cart",
+								"items"
+							],
+							"query": [
+								{
+									"key": "sessionKey",
+									"value": "{{cart_session_key}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Item - Deactivated Product (Should Fail)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 400 || pm.response.code === 404) {",
+									"    console.log('✅ Expected error for deactivated/invalid product');",
+									"    pm.test('Deactivated product rejected', function() {",
+									"        pm.expect([400, 404]).to.include(pm.response.code);",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"productId\": 999,\n  \"quantity\": 1,\n  \"price\": 100000\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/cart/items?sessionKey={{cart_session_key}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"cart",
+								"items"
+							],
+							"query": [
+								{
+									"key": "sessionKey",
+									"value": "{{cart_session_key}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Item - Exceeds Stock (Should Fail)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 400 || pm.response.code === 409) {",
+									"    var jsonData = pm.response.json();",
+									"    console.log('✅ Expected error: ' + jsonData.message);",
+									"    pm.test('Insufficient stock error', function() {",
+									"        pm.expect(jsonData.message).to.include('stock');",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"productId\": {{product_id_1}},\n  \"quantity\": 99999,\n  \"price\": 450000\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/cart/items?sessionKey={{cart_session_key}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"cart",
+								"items"
+							],
+							"query": [
+								{
+									"key": "sessionKey",
+									"value": "{{cart_session_key}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Complete Cart Flow",
+			"item": [
+				{
+					"name": "Step 1 - Create Fresh Cart",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    console.log('✅ Step 1: Fresh cart created');",
+									"    console.log('Session Key: ' + jsonData.data.sessionKey);",
+									"    pm.test('Cart is empty', function() {",
+									"        pm.expect(jsonData.data.items).to.have.lengthOf(0);",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/cart?sessionKey={{cart_session_key}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"cart"
+							],
+							"query": [
+								{
+									"key": "sessionKey",
+									"value": "{{cart_session_key}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Step 2 - Add First Item",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    console.log('✅ Step 2: First item added');",
+									"    console.log('Total: ' + jsonData.data.totalWithVat);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"productId\": {{product_id_1}},\n  \"quantity\": 2,\n  \"price\": 450000\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/cart/items?sessionKey={{cart_session_key}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"cart",
+								"items"
+							],
+							"query": [
+								{
+									"key": "sessionKey",
+									"value": "{{cart_session_key}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Step 3 - Add Second Item",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    console.log('✅ Step 3: Second item added');",
+									"    console.log('Total items: ' + jsonData.data.items.length);",
+									"    console.log('Total: ' + jsonData.data.totalWithVat);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"productId\": {{product_id_2}},\n  \"quantity\": 1,\n  \"price\": 180000\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/cart/items?sessionKey={{cart_session_key}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"cart",
+								"items"
+							],
+							"query": [
+								{
+									"key": "sessionKey",
+									"value": "{{cart_session_key}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Step 4 - Update Quantity",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    console.log('✅ Step 4: Quantity updated');",
+									"    console.log('New total: ' + jsonData.data.totalWithVat);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"productId\": {{product_id_1}},\n  \"quantity\": 3\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/cart/items?sessionKey={{cart_session_key}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"cart",
+								"items"
+							],
+							"query": [
+								{
+									"key": "sessionKey",
+									"value": "{{cart_session_key}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Step 5 - Review Final Cart",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    console.log('✅ Step 5: Cart ready for checkout');",
+									"    console.log('📦 Final Cart Summary:');",
+									"    jsonData.data.items.forEach(item => {",
+									"        console.log(`  ${item.productName}: ${item.quantity}x @ ${item.price} = ${item.totalPrice}`);",
+									"    });",
+									"    console.log('Total before VAT: ' + jsonData.data.totalBeforeVat);",
+									"    console.log('Total with VAT: ' + jsonData.data.totalWithVat);",
+									"    console.log('');",
+									"    console.log('💡 Next: Use this sessionKey to create an order');",
+									"    console.log('   Session Key: ' + jsonData.data.sessionKey);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/cart?sessionKey={{cart_session_key}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"cart"
+							],
+							"query": [
+								{
+									"key": "sessionKey",
+									"value": "{{cart_session_key}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Step-by-step walkthrough of a complete cart shopping flow from empty cart to checkout."
+		}
+	]
+}

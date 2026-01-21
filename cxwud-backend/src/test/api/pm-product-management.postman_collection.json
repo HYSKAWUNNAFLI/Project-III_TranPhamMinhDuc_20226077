@@ -1,0 +1,604 @@
+{
+	"info": {
+		"name": "CXWUD - Product Manager APIs",
+		"description": "API collection for Product Manager product management operations",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{pm_token}}",
+				"type": "string"
+			}
+		]
+	},
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8080",
+			"type": "string"
+		},
+		{
+			"key": "pm_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "product_id",
+			"value": "",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Login as Product Manager",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    pm.collectionVariables.set('pm_token', jsonData.data.accessToken);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"pm@aims.com\",\n  \"password\": \"pm123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/login",
+							"host": ["{{base_url}}"],
+							"path": ["api", "auth", "login"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Product Management",
+			"item": [
+				{
+					"name": "Create Product",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    pm.collectionVariables.set('product_id', jsonData.data.id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"typeCode\": \"BOOK\",\n  \"barcode\": \"978-0-123456-78-9\",\n  \"title\": \"Introduction to Algorithms\",\n  \"category\": \"Computer Science\",\n  \"conditionLabel\": \"New\",\n  \"height\": 23.5,\n  \"width\": 15.5,\n  \"length\": 3.2,\n  \"weight\": 1.2,\n  \"originalValue\": 500000,\n  \"currentPrice\": 450000,\n  \"stock\": 50,\n  \"attributes\": {\n    \"author\": \"Thomas H. Cormen\",\n    \"coverType\": \"Hardcover\",\n    \"publisher\": \"MIT Press\",\n    \"publicationDate\": \"2009-07-31\",\n    \"pages\": 1312,\n    \"language\": \"English\",\n    \"genre\": \"Computer Science\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/pm/products",
+							"host": ["{{base_url}}"],
+							"path": ["api", "pm", "products"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create DVD Product",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"typeCode\": \"DVD\",\n  \"barcode\": \"DVD-123456789\",\n  \"title\": \"The Matrix\",\n  \"category\": \"Action\",\n  \"conditionLabel\": \"New\",\n  \"height\": 19.0,\n  \"width\": 13.5,\n  \"length\": 1.5,\n  \"weight\": 0.1,\n  \"originalValue\": 200000,\n  \"currentPrice\": 180000,\n  \"stock\": 100,\n  \"attributes\": {\n    \"discType\": \"Blu-ray\",\n    \"director\": \"Wachowski Brothers\",\n    \"runtime\": 136,\n    \"studio\": \"Warner Bros\",\n    \"language\": \"English\",\n    \"subtitles\": \"English, Vietnamese\",\n    \"releaseDate\": \"1999-03-31\",\n    \"genre\": \"Sci-Fi\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/pm/products",
+							"host": ["{{base_url}}"],
+							"path": ["api", "pm", "products"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create CD Product",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"typeCode\": \"CD\",\n  \"barcode\": \"CD-987654321\",\n  \"title\": \"Abbey Road\",\n  \"category\": \"Music\",\n  \"conditionLabel\": \"New\",\n  \"height\": 14.0,\n  \"width\": 12.5,\n  \"length\": 1.0,\n  \"weight\": 0.08,\n  \"originalValue\": 150000,\n  \"currentPrice\": 135000,\n  \"stock\": 75,\n  \"attributes\": {\n    \"artists\": \"The Beatles\",\n    \"recordLabel\": \"Apple Records\",\n    \"trackList\": [\n      {\"title\": \"Come Together\", \"length\": 259},\n      {\"title\": \"Something\", \"length\": 182},\n      {\"title\": \"Here Comes the Sun\", \"length\": 185}\n    ],\n    \"genre\": \"Rock\",\n    \"releaseDate\": \"1969-09-26\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/pm/products",
+							"host": ["{{base_url}}"],
+							"path": ["api", "pm", "products"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List Products (PM View - All)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/pm/products?page=0&size=20",
+							"host": ["{{base_url}}"],
+							"path": ["api", "pm", "products"],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "20"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List Products with Filters",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/pm/products?query=algorithm&category=Computer Science&typeCode=BOOK&minPrice=100000&maxPrice=500000&page=0&size=20",
+							"host": ["{{base_url}}"],
+							"path": ["api", "pm", "products"],
+							"query": [
+								{
+									"key": "query",
+									"value": "algorithm"
+								},
+								{
+									"key": "category",
+									"value": "Computer Science"
+								},
+								{
+									"key": "typeCode",
+									"value": "BOOK"
+								},
+								{
+									"key": "minPrice",
+									"value": "100000"
+								},
+								{
+									"key": "maxPrice",
+									"value": "500000"
+								},
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "20"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Product by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/pm/products/{{product_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "pm", "products", "{{product_id}}"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Product",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"typeCode\": \"BOOK\",\n  \"barcode\": \"978-0-123456-78-9\",\n  \"title\": \"Introduction to Algorithms - 4th Edition\",\n  \"category\": \"Computer Science\",\n  \"conditionLabel\": \"New\",\n  \"height\": 23.5,\n  \"width\": 15.5,\n  \"length\": 3.2,\n  \"weight\": 1.2,\n  \"originalValue\": 500000,\n  \"currentPrice\": 400000,\n  \"stock\": 50,\n  \"attributes\": {\n    \"author\": \"Thomas H. Cormen\",\n    \"coverType\": \"Hardcover\",\n    \"publisher\": \"MIT Press\",\n    \"publicationDate\": \"2022-04-05\",\n    \"pages\": 1312,\n    \"language\": \"English\",\n    \"genre\": \"Computer Science\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/pm/products/{{product_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "pm", "products", "{{product_id}}"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Product (Stock = 0)",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/pm/products/{{product_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "pm", "products", "{{product_id}}"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Product (Auto-Deactivate if Stock > 0)",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/pm/products/{{product_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "pm", "products", "{{product_id}}"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Bulk Operations",
+			"item": [
+				{
+					"name": "Bulk Delete Products",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"productIds\": [1, 2, 3, 4, 5]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/pm/products/bulk-delete",
+							"host": ["{{base_url}}"],
+							"path": ["api", "pm", "products", "bulk-delete"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Bulk Delete - Max 10 Items",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"productIds\": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/pm/products/bulk-delete",
+							"host": ["{{base_url}}"],
+							"path": ["api", "pm", "products", "bulk-delete"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Bulk Delete - Exceeds Limit (Should Fail)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"productIds\": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/pm/products/bulk-delete",
+							"host": ["{{base_url}}"],
+							"path": ["api", "pm", "products", "bulk-delete"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Stock Management",
+			"item": [
+				{
+					"name": "Adjust Stock - Add Items",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"quantityChange\": 50,\n  \"reason\": \"New shipment arrived from supplier\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/pm/products/{{product_id}}/adjust-stock",
+							"host": ["{{base_url}}"],
+							"path": ["api", "pm", "products", "{{product_id}}", "adjust-stock"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Adjust Stock - Remove Items",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"quantityChange\": -10,\n  \"reason\": \"Damaged items removed from inventory\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/pm/products/{{product_id}}/adjust-stock",
+							"host": ["{{base_url}}"],
+							"path": ["api", "pm", "products", "{{product_id}}", "adjust-stock"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Adjust Stock - Inventory Count Correction",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"quantityChange\": -5,\n  \"reason\": \"Physical inventory count correction\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/pm/products/{{product_id}}/adjust-stock",
+							"host": ["{{base_url}}"],
+							"path": ["api", "pm", "products", "{{product_id}}", "adjust-stock"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Adjust Stock - Invalid (Negative Result)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"quantityChange\": -1000,\n  \"reason\": \"This should fail - would result in negative stock\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/pm/products/{{product_id}}/adjust-stock",
+							"host": ["{{base_url}}"],
+							"path": ["api", "pm", "products", "{{product_id}}", "adjust-stock"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Public Product APIs (No Auth)",
+			"item": [
+				{
+					"name": "List Active Products (Customer View)",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/products?page=0&size=20",
+							"host": ["{{base_url}}"],
+							"path": ["api", "products"],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "20"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Product Detail (Customer View)",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/products/{{product_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "products", "{{product_id}}"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search Products by Price Range",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/products?priceRange=200000-500000&page=0&size=20",
+							"host": ["{{base_url}}"],
+							"path": ["api", "products"],
+							"query": [
+								{
+									"key": "priceRange",
+									"value": "200000-500000"
+								},
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "20"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Validation Tests",
+			"item": [
+				{
+					"name": "Create Product - Invalid Price (Below 30%)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"typeCode\": \"BOOK\",\n  \"barcode\": \"TEST-123\",\n  \"title\": \"Test Book\",\n  \"category\": \"Test\",\n  \"originalValue\": 1000000,\n  \"currentPrice\": 200000,\n  \"stock\": 10,\n  \"attributes\": {}\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/pm/products",
+							"host": ["{{base_url}}"],
+							"path": ["api", "pm", "products"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Product - Invalid Price (Above 150%)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"typeCode\": \"BOOK\",\n  \"barcode\": \"TEST-456\",\n  \"title\": \"Test Book\",\n  \"category\": \"Test\",\n  \"originalValue\": 100000,\n  \"currentPrice\": 200000,\n  \"stock\": 10,\n  \"attributes\": {}\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/pm/products",
+							"host": ["{{base_url}}"],
+							"path": ["api", "pm", "products"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Product - Missing Required Fields",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"typeCode\": \"BOOK\",\n  \"title\": \"Test Book\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/pm/products",
+							"host": ["{{base_url}}"],
+							"path": ["api", "pm", "products"]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

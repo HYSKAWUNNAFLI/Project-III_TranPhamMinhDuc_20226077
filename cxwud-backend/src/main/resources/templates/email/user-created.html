@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Welcome to AIMS</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .header {
+            background-color: #f8f9fa;
+            padding: 10px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .content {
+            padding: 20px;
+        }
+
+        .footer {
+            font-size: 12px;
+            color: #777;
+            text-align: center;
+            margin-top: 20px;
+            border-top: 1px solid #ddd;
+            padding-top: 10px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>Welcome to AIMS!</h2>
+        </div>
+        <div class="content">
+            <p>Hello <strong th:text="${email}">User</strong>,</p>
+            <p>Your account has been successfully created by an administrator.</p>
+            <p>Here are your login details:</p>
+            <ul>
+                <li><strong>Username/Email:</strong> <span th:text="${email}">user@example.com</span></li>
+                <li><strong>Temporary Password:</strong> <span th:text="${temporaryPassword}">123456</span></li>
+            </ul>
+            <p>Please log in and change your password immediately.</p>
+            <p style="text-align: center;">
+                <a th:href="${loginUrl}" class="button">Login Now</a>
+            </p>
+        </div>
+        <div class="footer">
+            <p>This is an automated message, please do not reply.</p>
+            <p>&copy; 2025 AIMS System</p>
+        </div>
+    </div>
+</body>
+
+</html>
